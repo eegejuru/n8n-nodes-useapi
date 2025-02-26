@@ -13,16 +13,10 @@ export const runwayOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Get Assets List',
-				value: 'getAssets',
-				description: 'Get a list of assets from RunwayML',
-				action: 'Get assets list',
-			},
-			{
-				name: 'Get Asset',
-				value: 'getAsset',
-				description: 'Get details of a specific asset',
-				action: 'Get an asset',
+				name: 'AI Image Description:Extract Description',
+				value: 'describeImage',
+				description: 'Extract a text description from an image that can be used as a prompt',
+				action: 'Describe an image',
 			},
 			{
 				name: 'Delete Asset',
@@ -31,22 +25,22 @@ export const runwayOperations: INodeProperties[] = [
 				action: 'Delete an asset',
 			},
 			{
-				name: 'Upload Asset',
-				value: 'uploadAsset',
-				description: 'Upload a new asset to RunwayML',
-				action: 'Upload an asset',
-			},
-			{
 				name: 'Gen-3 Turbo Create',
 				value: 'gen3TurboCreate',
 				description: 'Create a video using Gen-3 Alpha Turbo',
-				action: 'Create a video with Gen-3 Alpha Turbo',
+				action: 'Create a video with gen 3 alpha turbo',
 			},
 			{
-				name: 'Tasks Management:Get Tasks List',
-				value: 'getTasks',
-				description: 'Get a list of tasks from RunwayML',
-				action: 'Get tasks list',
+				name: 'Get Asset',
+				value: 'getAsset',
+				description: 'Get details of a specific asset',
+				action: 'Get an asset',
+			},
+			{
+				name: 'Get Assets List',
+				value: 'getAssets',
+				description: 'Get a list of assets from RunwayML',
+				action: 'Get assets list',
 			},
 			{
 				name: 'Tasks Management:Get Task',
@@ -55,10 +49,16 @@ export const runwayOperations: INodeProperties[] = [
 				action: 'Get a task',
 			},
 			{
-				name: 'AI Image Description:Extract Description',
-				value: 'describeImage',
-				description: 'Extract a text description from an image that can be used as a prompt',
-				action: 'Describe an image',
+				name: 'Tasks Management:Get Tasks List',
+				value: 'getTasks',
+				description: 'Get a list of tasks from RunwayML',
+				action: 'Get tasks list',
+			},
+			{
+				name: 'Upload Asset',
+				value: 'uploadAsset',
+				description: 'Upload a new asset to RunwayML',
+				action: 'Upload an asset',
 			},
 		],
 		default: 'getAssets',
@@ -85,8 +85,11 @@ export const runwayFields: INodeProperties[] = [
 		displayName: 'Limit',
 		name: 'limit',
 		type: 'number',
-		default: 10,
-		description: 'Maximum number of results to return (1-50)',
+		typeOptions: {
+			minValue: 1,
+		},
+		default: 50,
+		description: 'Max number of results to return',
 		displayOptions: {
 			show: {
 				resource: ['runway'],
@@ -113,6 +116,10 @@ export const runwayFields: INodeProperties[] = [
 				name: 'mediaType',
 				type: 'options',
 				options: [
+					{
+						name: 'All',
+						value: '',
+					},
 					{
 						name: 'Video',
 						value: 'video',
@@ -174,7 +181,7 @@ export const runwayFields: INodeProperties[] = [
 				operation: ['deleteAsset'],
 			},
 		},
-		description: 'WARNING: This will permanently delete the asset and cannot be undone. Please confirm to proceed.',
+		description: 'Whether to proceed with permanently deleting the asset. This action cannot be undone.',
 		required: true,
 	},
 
@@ -197,8 +204,11 @@ export const runwayFields: INodeProperties[] = [
 		displayName: 'Limit',
 		name: 'limit',
 		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
 		default: 50,
-		description: 'Maximum number of results to return (1-1000)',
+		description: 'Max number of results to return',
 		displayOptions: {
 			show: {
 				resource: ['runway'],
@@ -345,21 +355,21 @@ export const runwayFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Duration (seconds)',
+				displayName: 'Duration (Seconds)',
 				name: 'duration',
 				type: 'number',
 				default: 0,
 				description: 'Duration in seconds for audio or video files',
 			},
 			{
-				displayName: 'Width (pixels)',
+				displayName: 'Width (Pixels)',
 				name: 'width',
 				type: 'number',
 				default: 0,
 				description: 'Width in pixels for image or video files',
 			},
 			{
-				displayName: 'Height (pixels)',
+				displayName: 'Height (Pixels)',
 				name: 'height',
 				type: 'number',
 				default: 0,

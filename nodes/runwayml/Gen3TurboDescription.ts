@@ -48,7 +48,6 @@ export const gen3TurboFields: INodeProperties[] = [
 		name: 'middleImage_assetId',
 		type: 'string',
 		default: '',
-		required: false,
 		displayOptions: {
 			show: {
 				resource: ['runway'],
@@ -63,7 +62,6 @@ export const gen3TurboFields: INodeProperties[] = [
 		name: 'lastImage_assetId',
 		type: 'string',
 		default: '',
-		required: false,
 		displayOptions: {
 			show: {
 				resource: ['runway'],
@@ -81,7 +79,6 @@ export const gen3TurboFields: INodeProperties[] = [
 			rows: 4,
 		},
 		default: '',
-		required: false,
 		displayOptions: {
 			show: {
 				resource: ['runway'],
@@ -168,7 +165,7 @@ export const gen3TurboFields: INodeProperties[] = [
 				name: 'static',
 				type: 'boolean',
 				default: false,
-				description: 'Keep the camera as still as possible',
+				description: 'Whether to keep the camera as still as possible',
 			},
 			{
 				displayName: 'Horizontal Motion',
@@ -256,7 +253,7 @@ export const gen3TurboFields: INodeProperties[] = [
 				name: 'exploreMode',
 				type: 'boolean',
 				default: false,
-				description: 'Use Explore mode (requires Runway Unlimited plan, does not use credits)',
+				description: 'Whether to use Explore mode (requires Runway Unlimited plan, does not use credits)',
 			},
 			{
 				displayName: 'Reply URL',

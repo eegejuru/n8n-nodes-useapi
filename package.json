@@ -22,11 +22,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lvalics/n8n-nodes-useapi.git"
+    "url": "git+https://github.com/lvalics/n8n-nodes-useapi.git"
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && gulp build:icons",
+    "clean": "rm -rf dist && rm -rf ~/.n8n/custom/nodes/RunwayGen3Turbo",
+    "build": "npm run clean && tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
@@ -66,5 +67,11 @@
     "onlyBuiltDependencies": [
       "eslint-plugin-n8n-nodes-base"
     ]
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "bugs": {
+    "url": "https://github.com/lvalics/n8n-nodes-useapi/issues"
   }
 }

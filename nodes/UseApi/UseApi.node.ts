@@ -1,4 +1,11 @@
-import { IExecuteFunctions, INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
+import { 
+	IExecuteFunctions, 
+	INodeExecutionData, 
+	INodeType, 
+	INodeTypeDescription,
+	NodeApiError,
+	NodeOperationError
+} from 'n8n-workflow';
 import { runwayFields, runwayOperations } from '../runwayml/RunwayDescription';
 import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
 
@@ -125,7 +132,7 @@ export class UseApi implements INodeType {
 						const confirmation = this.getNodeParameter('confirmation', i) as boolean;
 
 						if (!confirmation) {
-							throw new Error('Operation cancelled: You must confirm the deletion by checking the confirmation checkbox.');
+							throw new NodeOperationError(this.getNode(), 'Operation cancelled: You must confirm the deletion by checking the confirmation checkbox.', { itemIndex: i });
 						}
 
 						// Construct URL with BASE_URL_V1
@@ -179,7 +186,7 @@ export class UseApi implements INodeType {
 							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
 							
 							if (!items[i].binary) {
-								throw new Error(`No binary data found`);
+								throw new NodeApiError(this.getNode(), { message: 'No binary data found' });
 							}
 							
 							// Use type assertion to tell TypeScript that binary exists and has the correct type
@@ -187,7 +194,7 @@ export class UseApi implements INodeType {
 							
 							// Use a safer property access method that TypeScript understands
 							if (!(binaryPropertyName in binary)) {
-								throw new Error(`No binary data found in property "${binaryPropertyName}"`);
+								throw new NodeApiError(this.getNode(), { message: `No binary data found in property "${binaryPropertyName}"` });
 							}
 							
 							// Now TypeScript knows this is safe
