@@ -42,6 +42,10 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 Initial version, RunwayML integrated with some services.
 
+## Compatibility
+
+1.80.0 and above
+
 ## License
 
 [MIT](https://github.com/n8n-io/n8n-nodes-useapi/blob/master/LICENSE.md)
