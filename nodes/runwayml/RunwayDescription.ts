@@ -42,6 +42,24 @@ export const runwayOperations: INodeProperties[] = [
 				description: 'Create a video using Gen-3 Alpha Turbo',
 				action: 'Create a video with Gen-3 Alpha Turbo',
 			},
+			{
+				name: 'Tasks Management:Get Tasks List',
+				value: 'getTasks',
+				description: 'Get a list of tasks from RunwayML',
+				action: 'Get tasks list',
+			},
+			{
+				name: 'Tasks Management:Get Task',
+				value: 'getTask',
+				description: 'Get details of a specific task',
+				action: 'Get a task',
+			},
+			{
+				name: 'AI Image Description:Extract Description',
+				value: 'describeImage',
+				description: 'Extract a text description from an image that can be used as a prompt',
+				action: 'Describe an image',
+			},
 		],
 		default: 'getAssets',
 	},
@@ -158,6 +176,91 @@ export const runwayFields: INodeProperties[] = [
 		},
 		description: 'WARNING: This will permanently delete the asset and cannot be undone. Please confirm to proceed.',
 		required: true,
+	},
+
+	/* Get Tasks Operation */
+	{
+		displayName: 'Offset',
+		name: 'offset',
+		type: 'number',
+		default: 0,
+		description: 'Starting position for pagination (0-1000)',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getTasks'],
+			},
+		},
+		required: true,
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		default: 50,
+		description: 'Maximum number of results to return (1-1000)',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getTasks'],
+			},
+		},
+		required: true,
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getTasks'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Statuses',
+				name: 'statuses',
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. PENDING,RUNNING,THROTTLED, SUCCEEDED, FAILED',
+				description: 'Comma-separated list of task statuses to filter (PENDING, RUNNING, THROTTLED, SUCCEEDED, FAILED)',
+			},
+		],
+	},
+
+	/* Get Task Operation */
+	{
+		displayName: 'Task ID',
+		name: 'taskId',
+		type: 'string',
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getTask'],
+			},
+		},
+		description: 'The ID of the task to retrieve',
+	},
+
+	/* Describe Image Operation */
+	{
+		displayName: 'Image Asset ID',
+		name: 'imageAssetId',
+		type: 'string',
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['describeImage'],
+			},
+		},
+		description: 'The ID of the image asset to describe',
 	},
 
 	/* Upload Asset Operation */

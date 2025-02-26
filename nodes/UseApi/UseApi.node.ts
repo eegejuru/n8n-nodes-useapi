@@ -10,15 +10,15 @@ void BASE_URL_V2; // Prevent "unused variable" TypeScript error
 
 export class UseApi implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'UseAPI',
+		displayName: 'UseAPI RunwayML',
 		name: 'useApi',
 		icon: 'file:useapi.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Interact with UseApi API',
+		description: 'Interact with RunwayML through UseAPI',
 		defaults: {
-			name: 'UseApi',
+			name: 'UseAPI RunwayML',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -334,6 +334,77 @@ export class UseApi implements INodeType {
 								'Content-Type': 'application/json',
 							},
 							body: requestBody,
+							json: true,
+						});
+					} else if (operation === 'getTasks') {
+						// Get required parameters
+						const offset = this.getNodeParameter('offset', i) as number;
+						const limit = this.getNodeParameter('limit', i) as number;
+
+						// Get optional parameters
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
+							email?: string;
+							statuses?: string;
+						};
+
+						// Build the query string
+						let queryString = `?offset=${offset}&limit=${limit}`;
+
+						if (additionalFields.email) queryString += `&email=${encodeURIComponent(additionalFields.email)}`;
+						if (additionalFields.statuses) queryString += `&statuses=${encodeURIComponent(additionalFields.statuses)}`;
+
+						// Construct URL
+						const fullUrl = `${BASE_URL_V1}/runwayml/tasks/${queryString}`;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+
+						// Make request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+					} else if (operation === 'getTask') {
+						const taskId = this.getNodeParameter('taskId', i) as string;
+
+						// Construct URL
+						const fullUrl = `${BASE_URL_V1}/runwayml/tasks/${taskId}`;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+
+						// Make request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+					} else if (operation === 'describeImage') {
+						const imageAssetId = this.getNodeParameter('imageAssetId', i) as string;
+
+						// Construct URL
+						const fullUrl = `${BASE_URL_V1}/runwayml/frames/describe/${imageAssetId}`;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+
+						// Make request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
 							json: true,
 						});
 					}
