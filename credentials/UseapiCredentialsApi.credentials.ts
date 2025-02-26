@@ -8,12 +8,11 @@ import {
 export class UseapiCredentialsApi implements ICredentialType {
 	name = 'useApiApi';
 	displayName = 'UseAPI Credentials API';
-	documentationUrl =
-	'https://useapi.net/docs/start-here';
+	documentationUrl = 'https://useapi.net/docs/start-here';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'USEAPI Key',
-			name: 'UseApiKey',
+			displayName: 'API Key',
+			name: 'apiKey',
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
@@ -23,15 +22,21 @@ export class UseapiCredentialsApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				'useapi-key': '={{$credentials.UseApiKey}}',
-				accept: 'application/json',
+				'Authorization': '=Bearer {{$credentials.apiKey}}',
+				'Accept': 'application/json',
 			},
 		},
 	};
-	test?: ICredentialTestRequest | undefined = {
+	test: ICredentialTestRequest = {
 		request: {
 			baseURL: 'https://api.useapi.net/v2',
 			url: '/account',
-		},
+			method: 'GET',
+			headers: {
+				'X-Debug-Info': 'UseAPI credential test',
+				'Authorization': '=Bearer {{$credentials.apiKey}}',
+				'Accept': 'application/json'
+			}
+		}
 	};
 }

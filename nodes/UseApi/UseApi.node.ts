@@ -22,7 +22,7 @@ export class UseApi implements INodeType {
 			},
 		],
 		requestDefaults: {
-			baseURL: 'https://useapi.net',
+			baseURL: 'https://api.useapi.net/v2',
 			url: '',
 			headers: {
 				Accept: 'application/json',
