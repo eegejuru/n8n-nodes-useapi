@@ -8,4 +8,4 @@ yarn.lock
 .vscode/launch.json
 .aider*
 n8n-nodes-elevenlabs/*
-runmwayml.py
+docs/*
