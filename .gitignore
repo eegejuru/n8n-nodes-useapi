@@ -8,5 +8,4 @@ yarn.lock
 .vscode/launch.json
 .aider*
 docs/*
-Sheet/*
 
