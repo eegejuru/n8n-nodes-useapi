@@ -9,6 +9,45 @@ N8N_CUSTOM_DIR=~/.n8n/custom
 echo "Changing to project directory: $PROJECT_DIR"
 cd $PROJECT_DIR || { echo "Error: Could not change to project directory"; exit 1; }
 
+# Check for --build flag
+if [ "$1" = "--build" ]; then
+  # Extract current version from package.json
+  CURRENT_VERSION=$(grep -o '"version": "[^"]*"' package.json | cut -d'"' -f4)
+  
+  # Display alert and confirmation
+  echo "⚠️ IMPORTANT ⚠️"
+  echo "Current package version is: $CURRENT_VERSION"
+  echo "Please make sure you have incremented the version number in package.json before proceeding!"
+  echo ""
+  read -p "Do you want to continue with npm publish? (yes/no): " CONFIRM
+  
+  if [[ "$CONFIRM" != "yes" && "$CONFIRM" != "y" ]]; then
+    echo "Build and publish cancelled."
+    exit 0
+  fi
+  
+  # Clean up custom directory
+  echo "Cleaning up custom directory: $N8N_CUSTOM_DIR"
+  rm -rf $N8N_CUSTOM_DIR/nodes/UseApi
+  rm -rf $N8N_CUSTOM_DIR/credentials
+  
+  # Run the build
+  echo "Building project..."
+  pnpm run build
+  if [ $? -ne 0 ]; then
+    echo "Error: Build failed"
+    exit 1
+  fi
+  
+  # Run npm publish
+  echo "Running npm publish..."
+  npm publish
+  
+  echo "Build and publish completed successfully"
+  exit 0
+fi
+
+# Normal build process (without --build flag)
 # Run build
 echo "Building project..."
 pnpm run build
@@ -32,13 +71,6 @@ echo "Restarting n8n..."
 if systemctl is-active --quiet n8n; then
   sudo systemctl restart n8n
   echo "Restarted n8n via systemd"
-  exit 0
-fi
-
-# Method 2: If running as PM2 process
-if command -v pm2 &> /dev/null && pm2 list | grep -q n8n; then
-  pm2 restart n8n
-  echo "Restarted n8n via PM2"
   exit 0
 fi
 
