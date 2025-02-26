@@ -1,5 +1,4 @@
 import { IExecuteFunctions, INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
-import { httpVerbFields, httpVerbOperations } from './UseApiVerbDescription';
 import { runwayFields, runwayOperations } from './RunwayDescription';
 
 export class UseApi implements INodeType {
@@ -19,28 +18,17 @@ export class UseApi implements INodeType {
 		credentials: [
 			{
 				name: 'UseApiApi',
-				required: false,
+				required: true,
 			},
 		],
 		requestDefaults: {
-			baseURL: 'https://api.useapi.net/v2',
+			baseURL: 'https://api.useapi.net/v1',
 			url: '',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
 		},
-		/**
-		 * In the properties array we have two mandatory options objects required
-		 *
-		 * [Resource & Operation]
-		 *
-		 * https://docs.n8n.io/integrations/creating-nodes/code/create-first-node/#resources-and-operations
-		 *
-		 * In our example, the operations are separated into their own file (HTTPVerbDescription.ts)
-		 * to keep this class easy to read.
-		 *
-		 */
 		properties: [
 			{
 				displayName: 'Resource',
@@ -49,19 +37,13 @@ export class UseApi implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'HTTPLeh Verb',
-						value: 'httpVerb',
-					},
-					{
 						name: 'Runway',
 						value: 'runway',
 					},
 				],
-				default: 'httpVerb',
+				default: 'runway',
 			},
 
-			...httpVerbOperations,
-			...httpVerbFields,
 			...runwayOperations,
 			...runwayFields,
 		],
@@ -70,27 +52,46 @@ export class UseApi implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const resource = this.getNodeParameter('resource', 0) as string;
 		
 		let responseData;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				if (resource === 'httpVerb') {
-					// Existing HTTP verb handling code would go here
-					// This part should be preserved from the original implementation
-				} else if (resource === 'runway') {
-					const operation = this.getNodeParameter('operation', i) as string;
+				const operation = this.getNodeParameter('operation', i) as string;
+				
+				if (operation === 'getAssets') {
+					// Get required parameters
+					const offset = this.getNodeParameter('offset', i) as number;
+					const limit = this.getNodeParameter('limit', i) as number;
 					
-					if (operation === 'getAsset') {
-						const assetId = this.getNodeParameter('assetId', i) as string;
-						responseData = await this.helpers.request({
-							method: 'GET',
-							baseURL: 'https://api.useapi.net/v1/runwayml',
-							uri: `/assets/${assetId}`,
-							json: true,
-						});
-					}
+					// Get optional parameters
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
+						email?: string;
+						mediaType?: string;
+					};
+					
+					// Construct query parameters
+					const queryParams: Record<string, any> = {
+						offset,
+						limit
+					};
+					
+					if (additionalFields.email) queryParams.email = additionalFields.email;
+					if (additionalFields.mediaType) queryParams.mediaType = additionalFields.mediaType;
+					
+					responseData = await this.helpers.request({
+						method: 'GET',
+						uri: '/runwayml/assets',
+						qs: queryParams,
+						json: true,
+					});
+				} else if (operation === 'getAsset') {
+					const assetId = this.getNodeParameter('assetId', i) as string;
+					responseData = await this.helpers.request({
+						method: 'GET',
+						uri: `/runwayml/assets/${assetId}`,
+						json: true,
+					});
 				}
 
 				const executionData = this.helpers.constructExecutionMetaData(

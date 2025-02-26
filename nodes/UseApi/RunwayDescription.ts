@@ -13,18 +13,97 @@ export const runwayOperations: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Get Assets',
+				value: 'getAssets',
+				description: 'Get a list of assets from RunwayML',
+				action: 'Get assets list',
+			},
+			{
 				name: 'Get Asset',
 				value: 'getAsset',
 				description: 'Get details of a specific asset',
 				action: 'Get an asset',
 			},
 		],
-		default: 'getAsset',
+		default: 'getAssets',
 	},
 ];
 
 export const runwayFields: INodeProperties[] = [
-	/* Asset Operations */
+	/* Get Assets Operation */
+	{
+		displayName: 'Offset',
+		name: 'offset',
+		type: 'number',
+		default: 0,
+		description: 'Starting position for pagination (0-1000)',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getAssets'],
+			},
+		},
+		required: true,
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		default: 10,
+		description: 'Maximum number of results to return (1-50)',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getAssets'],
+			},
+		},
+		required: true,
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getAssets'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Email',
+				name: 'email',
+				type: 'string',
+				default: '',
+				description: 'Email associated with the RunwayML account (required if multiple accounts configured)',
+			},
+			{
+				displayName: 'Media Type',
+				name: 'mediaType',
+				type: 'options',
+				options: [
+					{
+						name: 'Video',
+						value: 'video',
+					},
+					{
+						name: 'Image',
+						value: 'image',
+					},
+					{
+						name: 'Audio',
+						value: 'audio',
+					},
+				],
+				default: '',
+				description: 'Type of media to filter results',
+			},
+		],
+	},
+
+	/* Get Asset Operation */
 	{
 		displayName: 'Asset ID',
 		name: 'assetId',
