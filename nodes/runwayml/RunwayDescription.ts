@@ -36,6 +36,12 @@ export const runwayOperations: INodeProperties[] = [
 				description: 'Upload a new asset to RunwayML',
 				action: 'Upload an asset',
 			},
+			{
+				name: 'Gen-3 Turbo Create',
+				value: 'gen3TurboCreate',
+				description: 'Create a video using Gen-3 Alpha Turbo',
+				action: 'Create a video with Gen-3 Alpha Turbo',
+			},
 		],
 		default: 'getAssets',
 	},

@@ -24,7 +24,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		description: 'Select which image positions to use',
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 	},
@@ -36,7 +37,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		description: 'Asset ID of the first image',
@@ -49,7 +51,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		required: false,
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 				imageInput: ['allImages'],
 			},
 		},
@@ -63,7 +66,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		required: false,
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 				imageInput: ['firstAndLastImages', 'allImages'],
 			},
 		},
@@ -80,7 +84,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		required: false,
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		description: 'Text prompt describing the video to create',
@@ -102,7 +107,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		default: 'landscape',
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		description: 'Aspect ratio of the video',
@@ -124,7 +130,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		default: 5,
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		description: 'Duration of the video in seconds',
@@ -137,7 +144,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		placeholder: 'e.g. 12345678',
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		description: 'Random seed for reproducible results (1-4294967294)',
@@ -150,7 +158,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		options: [
@@ -237,7 +246,8 @@ export const gen3TurboFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
-				operation: ['create'],
+				resource: ['runway'],
+				operation: ['gen3TurboCreate'],
 			},
 		},
 		options: [
