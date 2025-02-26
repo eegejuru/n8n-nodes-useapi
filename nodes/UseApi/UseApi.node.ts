@@ -146,6 +146,111 @@ export class UseApi implements INodeType {
 						});
 
 						// console.log('Delete response received');
+					} else if (operation === 'uploadAsset') {
+						const name = this.getNodeParameter('name', i) as string;
+						const inputType = this.getNodeParameter('inputType', i) as string;
+						
+						// Get additional fields
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
+							duration?: number;
+							width?: number;
+							height?: number;
+						};
+						
+						// Construct URL with query parameters
+						let queryUrl = `${BASE_URL_V1}/runwayml/assets/?name=${encodeURIComponent(name)}`;
+						
+						// Add optional parameters if they exist
+						if (additionalFields.duration) queryUrl += `&duration=${additionalFields.duration}`;
+						if (additionalFields.width) queryUrl += `&width=${additionalFields.width}`;
+						if (additionalFields.height) queryUrl += `&height=${additionalFields.height}`;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+						
+						let binaryData;
+						let contentType;
+						
+						if (inputType === 'binaryData') {
+							// Handle binary data upload
+							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+							
+							if (!items[i].binary) {
+								throw new Error(`No binary data found`);
+							}
+							
+							// Use type assertion to tell TypeScript that binary exists and has the correct type
+							const binary = items[i].binary!;
+							
+							// Use a safer property access method that TypeScript understands
+							if (!(binaryPropertyName in binary)) {
+								throw new Error(`No binary data found in property "${binaryPropertyName}"`);
+							}
+							
+							// Now TypeScript knows this is safe
+							const binaryProperty = binary[binaryPropertyName];
+							binaryData = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
+							contentType = binaryProperty.mimeType;
+						} else if (inputType === 'url') {
+							// Handle URL upload
+							const url = this.getNodeParameter('url', i) as string;
+							
+							// Download the file from the URL
+							const response = await this.helpers.request({
+								method: 'GET',
+								url,
+								encoding: null, // Get the response as a Buffer
+							});
+							
+							binaryData = response;
+							
+							// Try to determine content type from the URL
+							const fileExtension = url.split('.').pop()?.toLowerCase();
+							
+							if (fileExtension) {
+								// Map common extensions to content types based on docs
+								const contentTypeMap: { [key: string]: string } = {
+									'png': 'image/png',
+									'jpg': 'image/jpeg',
+									'jpeg': 'image/jpeg',
+									'gif': 'image/gif',
+									'webp': 'image/webp',
+									'mpo': 'image/mpo',
+									'mp4': 'video/mp4',
+									'mov': 'video/quicktime',
+									'3gp': 'video/3gpp',
+									'mkv': 'video/x-matroska',
+									'flv': 'video/x-flv',
+									'mpeg': 'video/mpeg',
+									'ts': 'video/MP2T',
+									'avi': 'video/x-msvideo',
+									'mjpeg': 'video/x-motion-jpeg',
+									'webm': 'video/webm',
+									'ogv': 'video/ogg',
+									'wav': 'audio/wav',
+									'mp3': 'audio/mpeg',
+									'flac': 'audio/flac',
+									'ogg': 'audio/ogg',
+								};
+								
+								contentType = contentTypeMap[fileExtension] || 'application/octet-stream';
+							} else {
+								contentType = 'application/octet-stream'; // Default
+							}
+						}
+						
+						// Make the API request to upload the asset
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: queryUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': contentType,
+							},
+							body: binaryData,
+							json: true,
+						});
 					}
 				}
 

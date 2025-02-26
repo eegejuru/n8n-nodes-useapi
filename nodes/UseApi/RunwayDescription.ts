@@ -30,6 +30,12 @@ export const runwayOperations: INodeProperties[] = [
 				description: 'Delete a specific asset (Warning: This action cannot be undone)',
 				action: 'Delete an asset',
 			},
+			{
+				name: 'Upload Asset',
+				value: 'uploadAsset',
+				description: 'Upload a new asset to RunwayML',
+				action: 'Upload an asset',
+			},
 		],
 		default: 'getAssets',
 	},
@@ -146,5 +152,110 @@ export const runwayFields: INodeProperties[] = [
 		},
 		description: 'WARNING: This will permanently delete the asset and cannot be undone. Please confirm to proceed.',
 		required: true,
+	},
+
+	/* Upload Asset Operation */
+	{
+		displayName: 'Name',
+		name: 'name',
+		type: 'string',
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['uploadAsset'],
+			},
+		},
+		description: 'The name of the file to be created',
+	},
+	{
+		displayName: 'Input Type',
+		name: 'inputType',
+		type: 'options',
+		options: [
+			{
+				name: 'Binary Data',
+				value: 'binaryData',
+			},
+			{
+				name: 'URL',
+				value: 'url',
+			},
+		],
+		default: 'binaryData',
+		description: 'The source of the file to upload',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['uploadAsset'],
+			},
+		},
+	},
+	{
+		displayName: 'Binary Property',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['uploadAsset'],
+				inputType: ['binaryData'],
+			},
+		},
+		description: 'Name of the binary property containing the file to upload',
+	},
+	{
+		displayName: 'URL',
+		name: 'url',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['uploadAsset'],
+				inputType: ['url'],
+			},
+		},
+		description: 'URL of the file to upload',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['uploadAsset'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Duration (seconds)',
+				name: 'duration',
+				type: 'number',
+				default: 0,
+				description: 'Duration in seconds for audio or video files',
+			},
+			{
+				displayName: 'Width (pixels)',
+				name: 'width',
+				type: 'number',
+				default: 0,
+				description: 'Width in pixels for image or video files',
+			},
+			{
+				displayName: 'Height (pixels)',
+				name: 'height',
+				type: 'number',
+				default: 0,
+				description: 'Height in pixels for image or video files',
+			},
+		],
 	},
 ];
