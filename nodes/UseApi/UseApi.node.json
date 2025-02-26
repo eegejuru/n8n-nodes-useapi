@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-useapi.useApi",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Developer Tools"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://useapi.net/docs/api-v2/get-account"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "http://useapi.net/"
+			}
+		]
+	}
+}
