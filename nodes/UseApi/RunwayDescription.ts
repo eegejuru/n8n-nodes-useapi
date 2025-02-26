@@ -73,13 +73,6 @@ export const runwayFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Email',
-				name: 'email',
-				type: 'string',
-				default: '',
-				description: 'Email associated with the RunwayML account (required if multiple accounts configured)',
-			},
-			{
 				displayName: 'Media Type',
 				name: 'mediaType',
 				type: 'options',
@@ -116,6 +109,6 @@ export const runwayFields: INodeProperties[] = [
 				operation: ['getAsset'],
 			},
 		},
-		description: 'The ID of the asset to retrieve',
+		description: 'The ID of the asset to retrieve (format: user:user_id-runwayml:account_email-asset:asset_uuid)',
 	},
 ];

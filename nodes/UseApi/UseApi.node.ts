@@ -66,14 +66,12 @@ export class UseApi implements INodeType {
 						
 						// Get optional parameters
 						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
-							email?: string;
 							mediaType?: string;
 						};
 						
 						// Build the query string directly
 						let queryString = `?offset=${offset}&limit=${limit}`;
 						
-						if (additionalFields.email) queryString += `&email=${encodeURIComponent(additionalFields.email)}`;
 						if (additionalFields.mediaType) queryString += `&mediaType=${encodeURIComponent(additionalFields.mediaType)}`;
 						
 						// Construct URL exactly like the working example
