@@ -1,6 +1,12 @@
 import { IExecuteFunctions, INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
 import { runwayFields, runwayOperations } from './RunwayDescription';
 
+// Define base URL constants
+const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
+const BASE_URL_V2 = 'https://api.useapi.net/v2'; // For credential management and verification
+// This constant is used in credentials/UseApiApi.credentials.ts
+void BASE_URL_V2; // Prevent "unused variable" TypeScript error
+
 export class UseApi implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'UseAPI',
@@ -21,13 +27,6 @@ export class UseApi implements INodeType {
 				required: true,
 			},
 		],
-		requestDefaults: {
-			baseURL: 'https://api.useapi.net/v1',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
 		properties: [
 			{
 				displayName: 'Resource',
@@ -71,55 +70,61 @@ export class UseApi implements INodeType {
 							mediaType?: string;
 						};
 						
-						// Construct query parameters
-						const queryParams: Record<string, any> = {
-							offset,
-							limit
-						};
+						// Build the query string directly
+						let queryString = `?offset=${offset}&limit=${limit}`;
 						
-						if (additionalFields.email) queryParams.email = additionalFields.email;
-						if (additionalFields.mediaType) queryParams.mediaType = additionalFields.mediaType;
+						if (additionalFields.email) queryString += `&email=${encodeURIComponent(additionalFields.email)}`;
+						if (additionalFields.mediaType) queryString += `&mediaType=${encodeURIComponent(additionalFields.mediaType)}`;
 						
-						// Log request details for debugging
-						console.log('Making request to: /runwayml/assets');
-						console.log('Query Parameters:', queryParams);
+						// Construct URL exactly like the working example
+						const fullUrl = `${BASE_URL_V1}/runwayml/assets/${queryString}`;
 						
-						// Make request using authentication
-						responseData = await this.helpers.requestWithAuthentication.call(
-							this,
-							'useApiApi',
-							{
-								method: 'GET',
-								url: '/runwayml/assets',
-								qs: queryParams,
-							}
-						);
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
 						
-						// Log response preview
-						console.log('Response:', JSON.stringify(responseData).substring(0, 200) + '...');
+						console.log('Making API request to:', fullUrl);
+						
+						// Make request with only the Authorization header
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+						
+						console.log('Response received');
+						
 					} else if (operation === 'getAsset') {
 						const assetId = this.getNodeParameter('assetId', i) as string;
 						
-						// Log request details for debugging
-						console.log('Making request to:', `/runwayml/assets/${assetId}`);
+						// Construct URL with BASE_URL_V1
+						const fullUrl = `${BASE_URL_V1}/runwayml/assets/${assetId}`;
 						
-						// Make request using authentication
-						responseData = await this.helpers.requestWithAuthentication.call(
-							this,
-							'useApiApi',
-							{
-								method: 'GET',
-								url: `/runwayml/assets/${assetId}`,
-							}
-						);
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
 						
-						// Log response preview
-						console.log('Response:', JSON.stringify(responseData).substring(0, 200) + '...');
+						console.log('Making API request to:', fullUrl);
+						
+						// Make request with only the Authorization header
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+						
+						console.log('Response received');
 					}
 				}
 
 				const executionData = this.helpers.constructExecutionMetaData(
-					this.helpers.returnJsonArray(responseData),
+					this.helpers.returnJsonArray(responseData || { error: "Failed to get data from API" }),
 					{ itemData: { item: i } },
 				);
 
@@ -128,7 +133,12 @@ export class UseApi implements INodeType {
 				console.error('Error in execution:', error);
 				if (this.continueOnFail()) {
 					const executionData = this.helpers.constructExecutionMetaData(
-						this.helpers.returnJsonArray({ error: error.message }),
+						this.helpers.returnJsonArray({ 
+							error: error.message,
+							details: error.response?.data || "No additional details",
+							status: error.response?.status,
+							statusText: error.response?.statusText
+						}),
 						{ itemData: { item: i } },
 					);
 					returnData.push(...executionData);

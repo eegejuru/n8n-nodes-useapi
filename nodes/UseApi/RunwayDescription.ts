@@ -17,24 +17,12 @@ export const runwayOperations: INodeProperties[] = [
 				value: 'getAssets',
 				description: 'Get a list of assets from RunwayML',
 				action: 'Get assets list',
-				routing: {
-					request: {
-						method: 'GET',
-						url: '/runwayml/assets',
-					},
-				},
 			},
 			{
 				name: 'Get Asset',
 				value: 'getAsset',
 				description: 'Get details of a specific asset',
 				action: 'Get an asset',
-				routing: {
-					request: {
-						method: 'GET',
-						url: '=/runwayml/assets/{{$parameter["assetId"]}}',
-					},
-				},
 			},
 		],
 		default: 'getAssets',
@@ -56,13 +44,6 @@ export const runwayFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		routing: {
-			request: {
-				qs: {
-					offset: '={{$value}}',
-				},
-			},
-		},
 	},
 	{
 		displayName: 'Limit',
@@ -77,13 +58,6 @@ export const runwayFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		routing: {
-			request: {
-				qs: {
-					limit: '={{$value}}',
-				},
-			},
-		},
 	},
 	{
 		displayName: 'Additional Fields',
@@ -104,13 +78,6 @@ export const runwayFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Email associated with the RunwayML account (required if multiple accounts configured)',
-				routing: {
-					request: {
-						qs: {
-							email: '={{$value}}',
-						},
-					},
-				},
 			},
 			{
 				displayName: 'Media Type',
@@ -132,13 +99,6 @@ export const runwayFields: INodeProperties[] = [
 				],
 				default: '',
 				description: 'Type of media to filter results',
-				routing: {
-					request: {
-						qs: {
-							mediaType: '={{$value}}',
-						},
-					},
-				},
 			},
 		],
 	},
