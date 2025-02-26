@@ -17,8 +17,13 @@ export class UseApi implements INodeType {
 		outputs: ['main'],
 		credentials: [
 			{
-				name: 'UseApiApi',
+				name: 'useApiApi',
 				required: true,
+				displayOptions: {
+					show: {
+						authentication: ['apiKey'],
+					},
+				},
 			},
 		],
 		requestDefaults: {
@@ -30,6 +35,19 @@ export class UseApi implements INodeType {
 			},
 		},
 		properties: [
+			{
+				displayName: 'Authentication',
+				name: 'authentication',
+				type: 'options',
+				options: [
+					{
+						name: 'API Key',
+						value: 'apiKey',
+					},
+				],
+				default: 'apiKey',
+				description: 'The authentication method to use',
+			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -57,41 +75,60 @@ export class UseApi implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
+				const resource = this.getNodeParameter('resource', i) as string;
 				const operation = this.getNodeParameter('operation', i) as string;
+				const authentication = this.getNodeParameter('authentication', i) as string;
 				
-				if (operation === 'getAssets') {
-					// Get required parameters
-					const offset = this.getNodeParameter('offset', i) as number;
-					const limit = this.getNodeParameter('limit', i) as number;
-					
-					// Get optional parameters
-					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
-						email?: string;
-						mediaType?: string;
-					};
-					
-					// Construct query parameters
-					const queryParams: Record<string, any> = {
-						offset,
-						limit
-					};
-					
-					if (additionalFields.email) queryParams.email = additionalFields.email;
-					if (additionalFields.mediaType) queryParams.mediaType = additionalFields.mediaType;
-					
-					responseData = await this.helpers.request({
-						method: 'GET',
-						uri: '/runwayml/assets',
-						qs: queryParams,
-						json: true,
-					});
-				} else if (operation === 'getAsset') {
-					const assetId = this.getNodeParameter('assetId', i) as string;
-					responseData = await this.helpers.request({
-						method: 'GET',
-						uri: `/runwayml/assets/${assetId}`,
-						json: true,
-					});
+				if (resource === 'runway') {
+					if (operation === 'getAssets') {
+						// Get required parameters
+						const offset = this.getNodeParameter('offset', i) as number;
+						const limit = this.getNodeParameter('limit', i) as number;
+						
+						// Get optional parameters
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
+							email?: string;
+							mediaType?: string;
+						};
+						
+						// Construct query parameters
+						const queryParams: Record<string, any> = {
+							offset,
+							limit
+						};
+						
+						if (additionalFields.email) queryParams.email = additionalFields.email;
+						if (additionalFields.mediaType) queryParams.mediaType = additionalFields.mediaType;
+						
+						// Make the request with proper authentication
+						if (authentication === 'apiKey') {
+							responseData = await this.helpers.requestWithAuthentication.call(
+								this,
+								'useApiApi',
+								{
+									method: 'GET',
+									url: 'https://api.useapi.net/v1/runwayml/assets',
+									qs: queryParams,
+									json: true,
+								}
+							);
+						}
+					} else if (operation === 'getAsset') {
+						const assetId = this.getNodeParameter('assetId', i) as string;
+						
+						// Make the request with proper authentication
+						if (authentication === 'apiKey') {
+							responseData = await this.helpers.requestWithAuthentication.call(
+								this,
+								'useApiApi',
+								{
+									method: 'GET',
+									url: `https://api.useapi.net/v1/runwayml/assets/${assetId}`,
+									json: true,
+								}
+							);
+						}
+					}
 				}
 
 				const executionData = this.helpers.constructExecutionMetaData(

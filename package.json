@@ -40,7 +40,7 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/UseapiCredentialsApi.credentials.js"
+      "dist/credentials/UseApiApi.credentials.js"
     ],
     "nodes": [
       "dist/nodes/UseApi/UseApi.node.js"
