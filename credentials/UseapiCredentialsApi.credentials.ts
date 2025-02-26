@@ -17,6 +17,21 @@ export class UseapiCredentialsApi implements ICredentialType {
 			typeOptions: { password: true },
 			default: '',
 		},
+		{
+			displayName: 'Runway Email',
+			name: 'runwayEmail',
+			type: 'string',
+			default: '',
+			description: 'Email for Runway ML authentication',
+		},
+		{
+			displayName: 'Runway Password',
+			name: 'runwayPassword',
+			type: 'string',
+			typeOptions: { password: true },
+			default: '',
+			description: 'Password for Runway ML authentication',
+		},
 	];
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
@@ -31,12 +46,7 @@ export class UseapiCredentialsApi implements ICredentialType {
 		request: {
 			baseURL: 'https://api.useapi.net/v2',
 			url: '/account',
-			method: 'GET',
-			headers: {
-				'X-Debug-Info': 'UseAPI credential test',
-				'Authorization': '=Bearer {{$credentials.apiKey}}',
-				'Accept': 'application/json'
-			}
+			method: 'GET'
 		}
 	};
 }

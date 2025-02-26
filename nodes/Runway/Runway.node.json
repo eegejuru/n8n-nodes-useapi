@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-useapi.runway",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["AI", "Video"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://useapi.net/docs/api-v2/runwayml"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://useapi.net/docs/api-v2/runwayml"
+			}
+		]
+	}
+}
