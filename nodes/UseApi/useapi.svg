@@ -1,18 +1,90 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">  <image id="image0" width="32" height="32" x="0" y="0"
-    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElN
-RQfmBg4UAC/TqOZZAAACA0lEQVRIx5XVv09TURwF8M+jFHDSyRkGFhPAEfyRdDHi5uriXyDoYgKT
-MJDWzUT/Ahf/AiOEpajEgCESmpiYmDCxGowDTYE+h76+vte+15Zzk753b7733HNO772PbEw7ECba
-genswtEcgl0/PHARV72066YrIDSZ6k8KBym4741r0XsB284TdUX8chn1zrzwJUmw4KFXPqjFE0Y0
-u5YKEhpmfLZuy7f2wLKGI8WhDRYdaVhurdTCidmU5P44N+skaaGQH1IfFFrOYMotT932zNgQExve
-OfTeT8dtBceO3TFlOyopY7UPxV+/fWyn3Y0xrFhJjZWFXhs12pKdRO9ObGSuyB8Xbd9JjMjDc6HQ
-IcrKqAiVe8vyCEJPrGBWxZYqqtZt9RbmHabAvAAVdVUlJTvWshbMt0AYn40OmlchSKOePTyYIMQn
-rb8yI8TsDCrRs4od7Jv3KOoPGWKboBqp2LN3FQvdO7EPshSsRSTXrSop2cSiiUGkG/bj2JqaQiHW
-4nv50mFcu28j30KQarAnEPhuzvwwGYQ975vx7+JwGXTjTIAzoYlhCArR5d0KkfauqJAVY6+FG5hD
-OS6veqyCuSiTAQT/jKmlQtyxIBCoZV28HQvN6LuQvJFC4xjvibfYOZUdUXd9taTWJbOubiIVXmjG
-W/fs9qpZcpr6pOe1U0udSf8BR7ef4yxyOskAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDYtMTRU
-MTc6MDA6NDcrMDM6MDBfo1sRAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTA2LTE0VDE3OjAwOjQ3
-KzAzOjAwLv7jrQAAAABJRU5ErkJggg==" />
+<svg
+    width="200"
+    height="200"
+    viewBox="0 0 200 200"
+    xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Background Circle -->
+  <circle
+    cx="100"
+    cy="100"
+    r="98"
+    fill="#f4efe9"
+  />
+
+  <!-- Abstract 'Watercolor' Brushstrokes (optional) -->
+  <path
+    fill="#c0cad4"
+    fill-opacity="0.3"
+    d="M25,60
+       C50,40 100,40 140,60
+       C160,70 180,90 160,120
+       C140,140 90,150 60,130
+       C30,110 10,80 25,60
+       Z"
+  />
+  <path
+    fill="#9fb3c4"
+    fill-opacity="0.2"
+    d="M120,120
+       C140,110 160,90 150,70
+       C140,50 100,50 80,65
+       C60,80 50,110 70,130
+       C85,145 110,135 120,120
+       Z"
+  />
+
+  <!-- Stylized Boat Hull -->
+  <path
+    d="M60,130
+       C70,135 130,135 140,130
+       L150,140
+       C120,150 80,150 50,140
+       Z"
+    fill="#2f2f2f"
+  />
+
+  <!-- Mast 1 -->
+  <rect
+    x="85"
+    y="50"
+    width="3"
+    height="80"
+    fill="#2f2f2f"
+  />
+  <!-- Mast 2 -->
+  <rect
+    x="95"
+    y="60"
+    width="3"
+    height="70"
+    fill="#2f2f2f"
+  />
+
+  <!-- Sails -->
+  <path
+    d="M88,55
+       L60,120
+       L88,120
+       Z"
+    fill="#e05b2f"
+  />
+  <path
+    d="M98,65
+       L120,130
+       L98,130
+       Z"
+    fill="#e05b2f"
+  />
+
+  <!-- Suggestion of a Wave -->
+  <path
+    d="M40,140
+       Q80,150 120,140
+       T160,140
+       Q120,160 80,140
+       T40,140 Z"
+    fill="#1d3757"
+    fill-opacity="0.3"
+  />
 </svg>

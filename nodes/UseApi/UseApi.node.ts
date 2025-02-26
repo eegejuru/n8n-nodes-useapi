@@ -5,7 +5,7 @@ export class UseApi implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'UseAPI',
 		name: 'useApi',
-		icon: 'file:useapi.svg',
+		icon: 'file:useapi.png',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
