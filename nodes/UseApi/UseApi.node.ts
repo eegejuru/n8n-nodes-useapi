@@ -118,6 +118,34 @@ export class UseApi implements INodeType {
 						});
 						
 						console.log('Response received');
+					} else if (operation === 'deleteAsset') {
+						const assetId = this.getNodeParameter('assetId', i) as string;
+						const confirmation = this.getNodeParameter('confirmation', i) as boolean;
+						
+						if (!confirmation) {
+							throw new Error('Operation cancelled: You must confirm the deletion by checking the confirmation checkbox.');
+						}
+						
+						// Construct URL with BASE_URL_V1
+						const fullUrl = `${BASE_URL_V1}/runwayml/assets/${assetId}`;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+						
+						console.log('Making API delete request to:', fullUrl);
+						
+						// Make request with DELETE method
+						responseData = await this.helpers.request({
+							method: 'DELETE',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+						
+						console.log('Delete response received');
 					}
 				}
 

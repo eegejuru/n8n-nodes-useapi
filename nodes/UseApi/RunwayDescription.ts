@@ -24,6 +24,12 @@ export const runwayOperations: INodeProperties[] = [
 				description: 'Get details of a specific asset',
 				action: 'Get an asset',
 			},
+			{
+				name: 'Delete Asset',
+				value: 'deleteAsset',
+				description: 'Delete a specific asset (Warning: This action cannot be undone)',
+				action: 'Delete an asset',
+			},
 		],
 		default: 'getAssets',
 	},
@@ -110,5 +116,35 @@ export const runwayFields: INodeProperties[] = [
 			},
 		},
 		description: 'The ID of the asset to retrieve (format: user:user_id-runwayml:account_email-asset:asset_uuid)',
+	},
+
+	/* Delete Asset Operation */
+	{
+		displayName: 'Asset ID',
+		name: 'assetId',
+		type: 'string',
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['deleteAsset'],
+			},
+		},
+		description: 'The ID of the asset to delete (format: user:user_id-runwayml:account_email-asset:asset_uuid)',
+	},
+	{
+		displayName: '⚠️ Confirmation',
+		name: 'confirmation',
+		type: 'boolean',
+		default: false,
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['deleteAsset'],
+			},
+		},
+		description: 'WARNING: This will permanently delete the asset and cannot be undone. Please confirm to proceed.',
+		required: true,
 	},
 ];
