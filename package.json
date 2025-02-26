@@ -43,8 +43,7 @@
       "dist/credentials/UseapiCredentialsApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/UseApi/UseApi.node.js",
-      "dist/nodes/Runway/Runway.node.js"
+      "dist/nodes/UseApi/UseApi.node.js"
     ]
   },
   "devDependencies": {
