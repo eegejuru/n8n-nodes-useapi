@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-useapi",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Ability to use multiple Midjourney, Riffusion, Mureka, Runway, MiniMax, InsightFaceSwap, Pika and PixVerse accounts complete with automated load balancing.",
   "keywords": [
     "n8n-community-node-package",
@@ -55,6 +55,7 @@
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
     "gulp": "^4.0.2",
     "i": "^0.3.7",
+    "n8n-workflow": "~1.0.0",
     "prettier": "^2.8.8",
     "typescript": "~4.8.4"
   },

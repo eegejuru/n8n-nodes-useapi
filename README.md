@@ -40,6 +40,10 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
+### 0.1.3
+- Text2Image node added.
+
+### 0.1.2
 Initial version, RunwayML integrated with some services.
 
 ## Compatibility

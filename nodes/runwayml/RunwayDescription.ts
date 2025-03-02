@@ -31,6 +31,12 @@ export const runwayOperations: INodeProperties[] = [
 				action: 'Create a video with gen 3 alpha turbo',
 			},
 			{
+				name: 'Generate Image from Text',
+				value: 'textToImage',
+				description: 'Generate an image from a text prompt using Stable Diffusion',
+				action: 'Generate an image from text',
+			},
+			{
 				name: 'Get Asset',
 				value: 'getAsset',
 				description: 'Get details of a specific asset',

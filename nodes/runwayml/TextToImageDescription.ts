@@ -1,0 +1,138 @@
+import { INodeProperties } from 'n8n-workflow';
+
+export const textToImageFields: INodeProperties[] = [
+	{
+		displayName: 'Text Prompt',
+		name: 'text_prompt',
+		type: 'string',
+		typeOptions: {
+			rows: 4,
+		},
+		default: '',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['textToImage'],
+			},
+		},
+		description: 'Text prompt describing the image to create',
+	},
+	{
+		displayName: 'Style',
+		name: 'style',
+		type: 'options',
+		options: [
+			{ name: 'Cinematic', value: 'cinematic' },
+			{ name: 'Abandoned', value: 'abandoned' },
+			{ name: 'Abstract Sculpture', value: 'abstract_sculpture' },
+			{ name: 'Advertising', value: 'advertising' },
+			{ name: 'Anime', value: 'anime' },
+			{ name: 'Architectural', value: 'architectural' },
+			{ name: 'Cartoon', value: 'cartoon' },
+			{ name: 'Cine Lens', value: 'cine_lens' },
+			{ name: 'Claymation', value: 'claymation' },
+			{ name: 'Concept Art', value: 'concept_art' },
+			{ name: 'Digital Art', value: 'digital_art' },
+			{ name: 'Duotone Artistic Photo', value: 'duotone_artistic_photo' },
+			{ name: 'Forestpunk', value: 'forestpunk' },
+			{ name: 'Frost', value: 'frost' },
+			{ name: 'Graphic Novel', value: 'graphic_novel' },
+			{ name: 'Graphite', value: 'graphite' },
+			{ name: 'Impressionist Painting', value: 'impressionist_painting' },
+			{ name: 'Isometric 3D', value: 'isometric_3d' },
+			{ name: 'Low Poly 3D', value: 'low_poly_3d' },
+			{ name: 'Macro Photography', value: 'macro_photography' },
+			{ name: 'Marker Drawing', value: 'marker_drawing' },
+			{ name: 'Moody Film', value: 'moody_film' },
+			{ name: 'Pixel Art', value: 'pixel_art' },
+			{ name: 'Retro Photography', value: 'retro_photography' },
+			{ name: 'Sci-fi Art', value: 'sci-fi_art' },
+			{ name: 'Stickers', value: 'stickers' },
+			{ name: 'Storyboard', value: 'storyboard' },
+			{ name: 'Actor Casting', value: 'actor_casting' },
+			{ name: 'Thriller', value: 'thriller' },
+			{ name: '35mm', value: '35mm' },
+			{ name: '3D Cartoon', value: '3d_cartoon' },
+			{ name: '3D Render', value: '3d_render' },
+			{ name: '80s Vaporwave', value: '80s_vaporwave' },
+		],
+		default: 'cinematic',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['textToImage'],
+			},
+		},
+		description: 'Style of the generated image',
+	},
+	{
+		displayName: 'Aspect Ratio',
+		name: 'aspect_ratio',
+		type: 'options',
+		options: [
+			{ name: '16:9 (Landscape)', value: '16:9' },
+			{ name: '21:9 (Widescreen)', value: '21:9' },
+			{ name: '1:1 (Square)', value: '1:1' },
+			{ name: '9:16 (Portrait)', value: '9:16' },
+			{ name: '4:3', value: '4:3' },
+			{ name: '3:4', value: '3:4' },
+		],
+		default: '16:9',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['textToImage'],
+			},
+		},
+		description: 'Aspect ratio of the generated image',
+	},
+	{
+		displayName: 'Additional Options',
+		name: 'additionalOptions',
+		type: 'collection',
+		placeholder: 'Add Option',
+		default: {},
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['textToImage'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Prompt Weight',
+				name: 'prompt_weight',
+				type: 'number',
+				typeOptions: {
+					minValue: 1,
+					maxValue: 30,
+				},
+				default: 1,
+				description: 'Weight of the prompt (1-30)',
+			},
+			{
+				displayName: 'Negative Prompt',
+				name: 'negative_prompt',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				description: 'Specify things to avoid in the generated image',
+			},
+			{
+				displayName: 'Seed',
+				name: 'seed',
+				type: 'number',
+				typeOptions: {
+					minValue: 1,
+					maxValue: 4294967294,
+				},
+				default: '',
+				placeholder: 'e.g. 12345678',
+				description: 'Random seed for reproducible results (1-4294967294)',
+			},
+		],
+	},
+];

@@ -8,6 +8,7 @@ import {
 } from 'n8n-workflow';
 import { runwayFields, runwayOperations } from '../runwayml/RunwayDescription';
 import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
+import { textToImageFields } from '../runwayml/TextToImageDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -53,6 +54,7 @@ export class UseApi implements INodeType {
 			...runwayOperations,
 			...runwayFields,
 			...gen3TurboFields,
+			...textToImageFields,
 		],
 	};
 
@@ -409,6 +411,43 @@ export class UseApi implements INodeType {
 						responseData = await this.helpers.request({
 							method: 'GET',
 							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+					} else if (operation === 'textToImage') {
+						// Get required parameters
+						const textPrompt = this.getNodeParameter('text_prompt', i) as string;
+						const style = this.getNodeParameter('style', i) as string;
+						const aspectRatio = this.getNodeParameter('aspect_ratio', i) as string;
+						
+						// Get additional options
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							prompt_weight?: number;
+							negative_prompt?: string;
+							seed?: number;
+						};
+						
+						// Build query parameters
+						let queryUrl = `${BASE_URL_V1}/runwayml/text_to_image_preview/?text_prompt=${encodeURIComponent(textPrompt)}`;
+						
+						// Add style and aspect ratio
+						queryUrl += `&style=${style}&aspect_ratio=${aspectRatio}`;
+						
+						// Add optional parameters if they exist
+						if (additionalOptions.prompt_weight) queryUrl += `&prompt_weight=${additionalOptions.prompt_weight}`;
+						if (additionalOptions.negative_prompt) queryUrl += `&negative_prompt=${encodeURIComponent(additionalOptions.negative_prompt)}`;
+						if (additionalOptions.seed) queryUrl += `&seed=${additionalOptions.seed}`;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+						
+						// Make the API request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: queryUrl,
 							headers: {
 								'Authorization': `Bearer ${token}`,
 							},
