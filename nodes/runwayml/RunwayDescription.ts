@@ -31,10 +31,22 @@ export const runwayOperations: INodeProperties[] = [
 				action: 'Create a video with gen 3 alpha turbo',
 			},
 			{
+				name: 'Video to Video',
+				value: 'videoToVideo',
+				description: 'Edit a video using text prompts with Gen-3 Alpha Turbo',
+				action: 'Gen-3 Alpha Turbo Video to Video',
+			},
+			{
 				name: 'Generate Image from Text',
 				value: 'textToImage',
 				description: 'Generate an image from a text prompt using Stable Diffusion',
-				action: 'Generate an image from text',
+				action: 'Text to Image instant generation (Stable Diffusion)',
+			},
+			{
+				name: 'Lip Sync',
+				value: 'lipSync',
+				description: 'Create a lip sync video from an image/video and audio or text',
+				action: 'Create a lip sync video',
 			},
 			{
 				name: 'Get Asset',

@@ -1,7 +1,7 @@
-import { 
-	IExecuteFunctions, 
-	INodeExecutionData, 
-	INodeType, 
+import {
+	IExecuteFunctions,
+	INodeExecutionData,
+	INodeType,
 	INodeTypeDescription,
 	NodeApiError,
 	NodeOperationError
@@ -9,6 +9,8 @@ import {
 import { runwayFields, runwayOperations } from '../runwayml/RunwayDescription';
 import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
 import { textToImageFields } from '../runwayml/TextToImageDescription';
+import { lipSyncFields } from '../runwayml/LipSyncDescription';
+import { videoToVideoFields } from '../runwayml/VideoToVideoDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -55,6 +57,8 @@ export class UseApi implements INodeType {
 			...runwayFields,
 			...gen3TurboFields,
 			...textToImageFields,
+			...lipSyncFields,
+			...videoToVideoFields,
 		],
 	};
 
@@ -160,45 +164,45 @@ export class UseApi implements INodeType {
 					} else if (operation === 'uploadAsset') {
 						const name = this.getNodeParameter('name', i) as string;
 						const inputType = this.getNodeParameter('inputType', i) as string;
-						
+
 						// Get additional fields
 						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
 							duration?: number;
 							width?: number;
 							height?: number;
 						};
-						
+
 						// Construct URL with query parameters
 						let queryUrl = `${BASE_URL_V1}/runwayml/assets/?name=${encodeURIComponent(name)}`;
-						
+
 						// Add optional parameters if they exist
 						if (additionalFields.duration) queryUrl += `&duration=${additionalFields.duration}`;
 						if (additionalFields.width) queryUrl += `&width=${additionalFields.width}`;
 						if (additionalFields.height) queryUrl += `&height=${additionalFields.height}`;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiApi');
 						const token = credentials.apiKey as string;
-						
+
 						let binaryData;
 						let contentType;
-						
+
 						if (inputType === 'binaryData') {
 							// Handle binary data upload
 							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-							
+
 							if (!items[i].binary) {
 								throw new NodeApiError(this.getNode(), { message: 'No binary data found' });
 							}
-							
+
 							// Use type assertion to tell TypeScript that binary exists and has the correct type
 							const binary = items[i].binary!;
-							
+
 							// Use a safer property access method that TypeScript understands
 							if (!(binaryPropertyName in binary)) {
 								throw new NodeApiError(this.getNode(), { message: `No binary data found in property "${binaryPropertyName}"` });
 							}
-							
+
 							// Now TypeScript knows this is safe
 							const binaryProperty = binary[binaryPropertyName];
 							binaryData = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
@@ -206,19 +210,19 @@ export class UseApi implements INodeType {
 						} else if (inputType === 'url') {
 							// Handle URL upload
 							const url = this.getNodeParameter('url', i) as string;
-							
+
 							// Download the file from the URL
 							const response = await this.helpers.request({
 								method: 'GET',
 								url,
 								encoding: null, // Get the response as a Buffer
 							});
-							
+
 							binaryData = response;
-							
+
 							// Try to determine content type from the URL
 							const fileExtension = url.split('.').pop()?.toLowerCase();
-							
+
 							if (fileExtension) {
 								// Map common extensions to content types based on docs
 								const contentTypeMap: { [key: string]: string } = {
@@ -244,13 +248,13 @@ export class UseApi implements INodeType {
 									'flac': 'audio/flac',
 									'ogg': 'audio/ogg',
 								};
-								
+
 								contentType = contentTypeMap[fileExtension] || 'application/octet-stream';
 							} else {
 								contentType = 'application/octet-stream'; // Default
 							}
 						}
-						
+
 						// Make the API request to upload the asset
 						responseData = await this.helpers.request({
 							method: 'POST',
@@ -270,7 +274,7 @@ export class UseApi implements INodeType {
 						const aspectRatio = this.getNodeParameter('aspect_ratio', i) as string;
 						const seconds = this.getNodeParameter('seconds', i) as number;
 						const seed = this.getNodeParameter('seed', i, '') as string | number;
-						
+
 						// Get camera motion options
 						const cameraMotionOptions = this.getNodeParameter('cameraMotionOptions', i, {}) as {
 							static?: boolean;
@@ -281,7 +285,7 @@ export class UseApi implements INodeType {
 							pan?: number;
 							tilt?: number;
 						};
-						
+
 						// Get additional settings
 						const additionalSettings = this.getNodeParameter('additionalSettings', i, {}) as {
 							exploreMode?: boolean;
@@ -289,7 +293,7 @@ export class UseApi implements INodeType {
 							replyRef?: string;
 							maxJobs?: number;
 						};
-						
+
 						// Build request body
 						const requestBody: {[key: string]: any} = {
 							firstImage_assetId: firstImageAssetId,
@@ -297,21 +301,21 @@ export class UseApi implements INodeType {
 							aspect_ratio: aspectRatio,
 							seconds: seconds,
 						};
-						
+
 						// Add conditional parameters based on image input
 						if (imageInput === 'firstAndLastImages' || imageInput === 'allImages') {
 							requestBody.lastImage_assetId = this.getNodeParameter('lastImage_assetId', i, '') as string;
 						}
-						
+
 						if (imageInput === 'allImages') {
 							requestBody.middleImage_assetId = this.getNodeParameter('middleImage_assetId', i, '') as string;
 						}
-						
+
 						// Add seed if provided
 						if (seed !== '') {
 							requestBody.seed = seed;
 						}
-						
+
 						// Add camera motion parameters
 						if (cameraMotionOptions.static) {
 							requestBody.static = true;
@@ -323,17 +327,17 @@ export class UseApi implements INodeType {
 							if (cameraMotionOptions.pan !== undefined) requestBody.pan = cameraMotionOptions.pan;
 							if (cameraMotionOptions.tilt !== undefined) requestBody.tilt = cameraMotionOptions.tilt;
 						}
-						
+
 						// Add additional settings
 						if (additionalSettings.exploreMode) requestBody.exploreMode = true;
 						if (additionalSettings.replyUrl) requestBody.replyUrl = additionalSettings.replyUrl;
 						if (additionalSettings.replyRef) requestBody.replyRef = additionalSettings.replyRef;
 						if (additionalSettings.maxJobs) requestBody.maxJobs = additionalSettings.maxJobs;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiApi');
 						const token = credentials.apiKey as string;
-						
+
 						// Make the API request to create the video
 						responseData = await this.helpers.request({
 							method: 'POST',
@@ -421,29 +425,29 @@ export class UseApi implements INodeType {
 						const textPrompt = this.getNodeParameter('text_prompt', i) as string;
 						const style = this.getNodeParameter('style', i) as string;
 						const aspectRatio = this.getNodeParameter('aspect_ratio', i) as string;
-						
+
 						// Get additional options
 						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
 							prompt_weight?: number;
 							negative_prompt?: string;
 							seed?: number;
 						};
-						
+
 						// Build query parameters
 						let queryUrl = `${BASE_URL_V1}/runwayml/text_to_image_preview/?text_prompt=${encodeURIComponent(textPrompt)}`;
-						
+
 						// Add style and aspect ratio
 						queryUrl += `&style=${style}&aspect_ratio=${aspectRatio}`;
-						
+
 						// Add optional parameters if they exist
 						if (additionalOptions.prompt_weight) queryUrl += `&prompt_weight=${additionalOptions.prompt_weight}`;
 						if (additionalOptions.negative_prompt) queryUrl += `&negative_prompt=${encodeURIComponent(additionalOptions.negative_prompt)}`;
 						if (additionalOptions.seed) queryUrl += `&seed=${additionalOptions.seed}`;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiApi');
 						const token = credentials.apiKey as string;
-						
+
 						// Make the API request
 						responseData = await this.helpers.request({
 							method: 'GET',
@@ -451,6 +455,109 @@ export class UseApi implements INodeType {
 							headers: {
 								'Authorization': `Bearer ${token}`,
 							},
+							json: true,
+						});
+					} else if (operation === 'lipSync') {
+						// Get the input type
+						const inputType = this.getNodeParameter('inputType', i) as string;
+
+						// Prepare request body
+						const requestBody: {[key: string]: any} = {};
+
+						// Add parameters based on input type
+						if (inputType === 'imageAudio' || inputType === 'imageVoiceText') {
+							requestBody.image_assetId = this.getNodeParameter('image_assetId', i) as string;
+						}
+
+						if (inputType === 'videoAudio' || inputType === 'videoVoiceText') {
+							requestBody.video_assetId = this.getNodeParameter('video_assetId', i) as string;
+						}
+
+						if (inputType === 'imageAudio' || inputType === 'videoAudio') {
+							requestBody.audio_assetId = this.getNodeParameter('audio_assetId', i) as string;
+						}
+
+						if (inputType === 'imageVoiceText' || inputType === 'videoVoiceText') {
+							requestBody.voiceId = this.getNodeParameter('voiceId', i) as string;
+							requestBody.voice_text = this.getNodeParameter('voice_text', i) as string;
+							requestBody.model_id = this.getNodeParameter('model_id', i) as string;
+						}
+
+						// Get additional options
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							exploreMode?: boolean;
+							replyUrl?: string;
+							replyRef?: string;
+							maxJobs?: number;
+						};
+
+						// Add additional options if provided
+						if (additionalOptions.exploreMode) requestBody.exploreMode = true;
+						if (additionalOptions.replyUrl) requestBody.replyUrl = additionalOptions.replyUrl;
+						if (additionalOptions.replyRef) requestBody.replyRef = additionalOptions.replyRef;
+						if (additionalOptions.maxJobs) requestBody.maxJobs = additionalOptions.maxJobs;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+
+						// Make the API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/runwayml/lipsync/create`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
+							json: true,
+						});
+					} else if (operation === 'videoToVideo') {
+						// Get required parameters
+						const assetId = this.getNodeParameter('assetId', i) as string;
+						const textPrompt = this.getNodeParameter('text_prompt', i) as string;
+						const aspectRatio = this.getNodeParameter('aspect_ratio', i) as string;
+						const structureTransformation = this.getNodeParameter('structure_transformation', i) as number;
+						const seconds = this.getNodeParameter('seconds', i) as number;
+
+						// Get additional options
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							seed?: number;
+							exploreMode?: boolean;
+							replyUrl?: string;
+							replyRef?: string;
+							maxJobs?: number;
+						};
+
+						// Build request body
+						const requestBody: {[key: string]: any} = {
+							assetId: assetId,
+							text_prompt: textPrompt,
+							aspect_ratio: aspectRatio,
+							structure_transformation: structureTransformation,
+							seconds: seconds
+						};
+
+						// Add additional options if provided
+						if (additionalOptions.seed) requestBody.seed = additionalOptions.seed;
+						if (additionalOptions.exploreMode) requestBody.exploreMode = true;
+						if (additionalOptions.replyUrl) requestBody.replyUrl = additionalOptions.replyUrl;
+						if (additionalOptions.replyRef) requestBody.replyRef = additionalOptions.replyRef;
+						if (additionalOptions.maxJobs) requestBody.maxJobs = additionalOptions.maxJobs;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const token = credentials.apiKey as string;
+
+						// Make the API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/runwayml/gen3turbo/video`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
 							json: true,
 						});
 					}

@@ -42,6 +42,8 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ### 0.1.3
 - Text2Image node added.
+- Lipsync node added.
+- Gen-3 Alpha Turbo Video to Video node added.
 
 ### 0.1.2
 Initial version, RunwayML integrated with some services.
