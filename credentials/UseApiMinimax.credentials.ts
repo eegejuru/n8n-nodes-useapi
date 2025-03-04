@@ -71,15 +71,9 @@ export class UseApiMinimax implements ICredentialType {
 	};
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.useapi.net/v1',
-			url: '/minimax/accounts/account',
-			method: 'POST',
-			body: {
-				account: '={{$credentials.minimaxAccount}}',
-				url: '={{$credentials.minimaxUrl}}',
-				token: '={{$credentials.minimaxToken}}',
-				maxJobs: '={{$credentials.maxJobs}}'
-			}
+			baseURL: 'https://api.useapi.net/v2',
+			url: '/account',
+			method: 'GET'
 		}
 	};
 }

@@ -109,13 +109,6 @@ export const videosCreateFields: INodeProperties[] = [
 				default: '',
 				description: 'Custom reference ID to include in the callback',
 			},
-			{
-				displayName: 'FileID',
-				name: 'fileID',
-				type: 'string',
-				default: '',
-				description: 'fileID (uploaded via POST /files or existing GET /files)',
-			},
 		],
 	},
 ];
