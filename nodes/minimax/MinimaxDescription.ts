@@ -13,13 +13,20 @@ export const minimaxOperations: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Create/Update Account',
+				value: 'createAccount',
+				description: 'Register or update a MiniMax account with UseAPI',
+				action: 'Create or update an account',
+			},
+			{
 				name: 'Create Video',
 				value: 'createVideo',
 				description: 'Create a 5-second video using text/image prompt',
 				action: 'Create a video',
 			},
+
 		],
-		default: 'createVideo',
+		default: 'createAccount',
 	},
 ];
 

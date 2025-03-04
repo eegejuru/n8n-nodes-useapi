@@ -13,6 +13,12 @@ export const runwayOperations: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Create/Update Account',
+				value: 'createAccount',
+				description: 'Register or update a RunwayML account with UseAPI',
+				action: 'Create or update an account',
+			},
+			{
 				name: 'Upload Asset',
 				value: 'uploadAsset',
 				description: 'Upload a new asset to RunwayML',
@@ -79,7 +85,7 @@ export const runwayOperations: INodeProperties[] = [
 				action: 'Create a lip sync video',
 			},
 		],
-		default: 'getAssets',
+		default: 'createAccount',
 	},
 ];
 

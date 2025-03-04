@@ -11,8 +11,10 @@ import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
 import { textToImageFields } from '../runwayml/TextToImageDescription';
 import { lipSyncFields } from '../runwayml/LipSyncDescription';
 import { videoToVideoFields } from '../runwayml/VideoToVideoDescription';
+import { accountCreateFields as runwayAccountCreateFields } from '../runwayml/AccountCreateDescription';
 import { minimaxFields, minimaxOperations } from '../minimax/MinimaxDescription';
 import { videosCreateFields } from '../minimax/VideosCreateDescription';
+import { accountCreateFields } from '../minimax/AccountCreateDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -30,7 +32,7 @@ export class UseApi implements INodeType {
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Interact with RunwayML through UseAPI',
 		defaults: {
-			name: 'UseAPI RunwayML',
+			name: 'UseAPI',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -79,9 +81,11 @@ export class UseApi implements INodeType {
 			...textToImageFields,
 			...lipSyncFields,
 			...videoToVideoFields,
+			...runwayAccountCreateFields,
 			...minimaxOperations,
 			...minimaxFields,
 			...videosCreateFields,
+			...accountCreateFields,
 		],
 	};
 
@@ -583,6 +587,44 @@ export class UseApi implements INodeType {
 							body: requestBody,
 							json: true,
 						});
+					} else if (operation === 'createAccount') {
+						// Check confirmation
+						const confirmRegistration = this.getNodeParameter('confirmRegistration', i) as boolean;
+						
+						if (!confirmRegistration) {
+							throw new NodeOperationError(this.getNode(), 'Operation cancelled: Please confirm the registration by checking the confirmation checkbox.', { itemIndex: i });
+						}
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiApi');
+						const apiToken = credentials.apiKey as string;
+						const runwayEmail = credentials.runwayEmail as string;
+						const runwayPassword = credentials.runwayPassword as string;
+						const maxJobs = 5; // Default value
+						
+						// Validate required credential fields
+						if (!runwayEmail || !runwayPassword) {
+							throw new NodeOperationError(this.getNode(), 'Missing required credential fields: Please ensure "Runway Email" and "Runway Password" are set in your credentials.', { itemIndex: i });
+						}
+						
+						// Create request body
+						const requestBody = {
+							email: runwayEmail,
+							password: runwayPassword,
+							maxJobs: maxJobs,
+						};
+						
+						// Make API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/runwayml/accounts/${runwayEmail}`,
+							headers: {
+								'Authorization': `Bearer ${apiToken}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
+							json: true,
+						});
 					}
 				} else if (resource === 'minimax') {
 					if (operation === 'getAccountInfo') {
@@ -656,6 +698,46 @@ export class UseApi implements INodeType {
 							url: `${BASE_URL_V1}/minimax/videos/create`,
 							headers: {
 								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
+							json: true,
+						});
+					} else if (operation === 'createAccount') {
+						// Check confirmation
+						const confirmRegistration = this.getNodeParameter('confirmRegistration', i) as boolean;
+
+						if (!confirmRegistration) {
+							throw new NodeOperationError(this.getNode(), 'Operation cancelled: Please confirm the registration by checking the confirmation checkbox.', { itemIndex: i });
+						}
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const apiToken = credentials.apiKey as string;
+						const minimaxAccount = credentials.minimaxAccount as string;
+						const minimaxUrl = credentials.minimaxUrl as string;
+						const minimaxToken = credentials.minimaxToken as string;
+						const maxJobs = credentials.maxJobs as number || 1;
+
+						// Validate required credential fields
+						if (!minimaxAccount || !minimaxToken) {
+							throw new NodeOperationError(this.getNode(), 'Missing required credential fields: Please ensure "Account Name" and "Minimax API Token" are set in your credentials.', { itemIndex: i });
+						}
+
+						// Create request body
+						const requestBody = {
+							account: minimaxAccount,
+							url: minimaxUrl || '',
+							token: minimaxToken,
+							maxJobs: maxJobs,
+						};
+
+						// Make API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/minimax/accounts/${minimaxAccount}`,
+							headers: {
+								'Authorization': `Bearer ${apiToken}`,
 								'Content-Type': 'application/json',
 							},
 							body: requestBody,
