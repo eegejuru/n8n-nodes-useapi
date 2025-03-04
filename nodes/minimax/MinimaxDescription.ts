@@ -24,7 +24,24 @@ export const minimaxOperations: INodeProperties[] = [
 				description: 'Create a 5-second video using text/image prompt',
 				action: 'Create a video',
 			},
-
+			{
+				name: 'List Files',
+				value: 'listFiles',
+				description: 'Get a list of uploaded files',
+				action: 'List files',
+			},
+			{
+				name: 'Retrieve Video',
+				value: 'retrieveVideo',
+				description: 'Get status and details of a video by ID',
+				action: 'Retrieve a video',
+			},
+			{
+				name: 'Upload File',
+				value: 'uploadFile',
+				description: 'Upload an image file to be used in video creation',
+				action: 'Upload a file',
+			},
 		],
 		default: 'createAccount',
 	},

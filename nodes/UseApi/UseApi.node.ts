@@ -15,6 +15,9 @@ import { accountCreateFields as runwayAccountCreateFields } from '../runwayml/Ac
 import { minimaxFields, minimaxOperations } from '../minimax/MinimaxDescription';
 import { videosCreateFields } from '../minimax/VideosCreateDescription';
 import { accountCreateFields } from '../minimax/AccountCreateDescription';
+import { videosRetrieveFields } from '../minimax/VideosRetrieveDescription';
+import { filesCreateFields } from '../minimax/FilesCreateDescription';
+import { filesListFields } from '../minimax/FilesListDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -86,6 +89,9 @@ export class UseApi implements INodeType {
 			...minimaxFields,
 			...videosCreateFields,
 			...accountCreateFields,
+			...videosRetrieveFields,
+			...filesCreateFields,
+			...filesListFields,
 		],
 	};
 
@@ -743,6 +749,134 @@ export class UseApi implements INodeType {
 							body: requestBody,
 							json: true,
 						});
+					} else if (operation === 'retrieveVideo') {
+						// Get the video ID
+						const videoId = this.getNodeParameter('videoId', i) as string;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+						
+						// Make API request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: `${BASE_URL_V1}/minimax/videos/${videoId}`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+					} else if (operation === 'uploadFile') {
+						// Get account parameter (optional)
+						const account = this.getNodeParameter('account', i, '') as string;
+						
+						// Get input type
+						const inputType = this.getNodeParameter('inputType', i) as string;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+						
+						// Build URL with optional account parameter
+						let url = `${BASE_URL_V1}/minimax/files/`;
+						if (account) {
+							url += `?account=${encodeURIComponent(account)}`;
+						}
+						
+						let binaryData;
+						let contentType;
+						
+						if (inputType === 'binaryData') {
+							// Get binary data from the specified property
+							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+							
+							if (!items[i].binary) {
+								throw new NodeApiError(this.getNode(), { message: 'No binary data found' });
+							}
+							
+							const binary = items[i].binary!;
+							
+							if (!(binaryPropertyName in binary)) {
+								throw new NodeApiError(this.getNode(), { message: `No binary data found in property "${binaryPropertyName}"` });
+							}
+							
+							const binaryProperty = binary[binaryPropertyName];
+							binaryData = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
+							contentType = binaryProperty.mimeType;
+							
+							// Make sure content type is acceptable for Minimax
+							if (!contentType.startsWith('image/')) {
+								throw new NodeApiError(this.getNode(), { message: `Invalid content type: ${contentType}. Only image files are supported.` });
+							}
+						} else if (inputType === 'url') {
+							// Download file from URL
+							const imageUrl = this.getNodeParameter('url', i) as string;
+							
+							// Download the file
+							const response = await this.helpers.request({
+								method: 'GET',
+								url: imageUrl,
+								encoding: null, // Get the response as a Buffer
+							});
+							
+							binaryData = response;
+							
+							// Try to determine content type from URL extension
+							const fileExtension = imageUrl.split('.').pop()?.toLowerCase();
+							
+							if (fileExtension === 'png') {
+								contentType = 'image/png';
+							} else if (['jpg', 'jpeg'].includes(fileExtension || '')) {
+								contentType = 'image/jpeg';
+							} else if (fileExtension === 'webp') {
+								contentType = 'image/jpeg'; // Use JPEG content type for webp as per docs
+							} else {
+								// Default to JPEG if can't determine
+								contentType = 'image/jpeg';
+							}
+						}
+						
+						// Make the API request to upload the file
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: url,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': contentType,
+							},
+							body: binaryData,
+							json: true,
+						});
+					} else if (operation === 'listFiles') {
+						// Get parameters
+						const account = this.getNodeParameter('account', i, '') as string;
+						const limit = this.getNodeParameter('limit', i, 10) as number;
+						const fileId = this.getNodeParameter('fileId', i, '') as string;
+						
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+						
+						// Build URL with parameters
+						let url = `${BASE_URL_V1}/minimax/files/?limit=${limit}`;
+						if (account) {
+							url += `&account=${encodeURIComponent(account)}`;
+						}
+						
+						// Make API request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: url,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+							json: true,
+						});
+						
+						// Filter by fileId if specified
+						if (fileId && Array.isArray(responseData)) {
+							responseData = responseData.filter(file => file.file_id === fileId);
+						}
 					}
 				}
 

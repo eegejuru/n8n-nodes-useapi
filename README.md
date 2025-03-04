@@ -40,6 +40,11 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
+### 0.1.4
+- Renamed nodes to be more easy to regognize.
+- Added create account in UseNet APi as needed, to not create online.
+- Started to add Minimax nodes (Create video and Get video).
+
 ### 0.1.3
 - Text2Image node added.
 - Lipsync node added.
