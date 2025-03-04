@@ -7,8 +7,8 @@ import {
 
 export class UseApiApi implements ICredentialType {
 	name = 'useApiApi';
-	displayName = 'UseAPI Credentials API';
-	documentationUrl = 'https://useapi.net/docs/start-here';
+	displayName = 'UseAPI RunwayML Credentials';
+	documentationUrl = 'https://useapi.net/docs/start-here/setup-runwayml';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'API Key',

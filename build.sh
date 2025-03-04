@@ -13,24 +13,24 @@ cd $PROJECT_DIR || { echo "Error: Could not change to project directory"; exit 1
 if [ "$1" = "--build" ]; then
   # Extract current version from package.json
   CURRENT_VERSION=$(grep -o '"version": "[^"]*"' package.json | cut -d'"' -f4)
-  
+
   # Display alert and confirmation
   echo "⚠️ IMPORTANT ⚠️"
   echo "Current package version is: $CURRENT_VERSION"
   echo "Please make sure you have incremented the version number in package.json before proceeding!"
   echo ""
   read -p "Do you want to continue with npm publish? (yes/no): " CONFIRM
-  
+
   if [[ "$CONFIRM" != "yes" && "$CONFIRM" != "y" ]]; then
     echo "Build and publish cancelled."
     exit 0
   fi
-  
+
   # Clean up custom directory
   echo "Cleaning up custom directory: $N8N_CUSTOM_DIR"
-  rm -rf $N8N_CUSTOM_DIR/nodes/UseApi
+  rm -rf $N8N_CUSTOM_DIR/nodes/
   rm -rf $N8N_CUSTOM_DIR/credentials
-  
+
   # Run the build
   echo "Building project..."
   pnpm run build
@@ -38,11 +38,11 @@ if [ "$1" = "--build" ]; then
     echo "Error: Build failed"
     exit 1
   fi
-  
+
   # Run npm publish
   echo "Running npm publish..."
   npm publish
-  
+
   echo "Build and publish completed successfully"
   exit 0
 fi
