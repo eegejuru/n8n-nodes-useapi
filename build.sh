@@ -28,8 +28,11 @@ if [ "$1" = "--build" ]; then
 
   # Clean up custom directory
   echo "Cleaning up custom directory: $N8N_CUSTOM_DIR"
-  rm -rf $N8N_CUSTOM_DIR/nodes/
-  rm -rf $N8N_CUSTOM_DIR/credentials
+  # Ensure the directory exists before trying to clean it
+  mkdir -p $N8N_CUSTOM_DIR
+  # Remove all contents of the custom directory
+  rm -rf $N8N_CUSTOM_DIR/*
+  echo "All files in $N8N_CUSTOM_DIR have been removed"
 
   # Run the build
   echo "Building project..."
@@ -56,8 +59,13 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Create custom directory if it doesn't exist
+# Clean up custom directory
+echo "Cleaning up custom directory: $N8N_CUSTOM_DIR"
+# Ensure the directory exists before trying to clean it
 mkdir -p $N8N_CUSTOM_DIR
+# Remove all contents of the custom directory
+rm -rf $N8N_CUSTOM_DIR/*
+echo "All files in $N8N_CUSTOM_DIR have been removed"
 
 # Copy built files
 echo "Copying files to n8n custom directory: $N8N_CUSTOM_DIR"
