@@ -27,11 +27,11 @@ export class UseApiMinimax implements ICredentialType {
 			default: 'The following fields are used to register your Minimax account with UseAPI',
 		},
 		{
-			displayName: 'Account Name',
+			displayName: 'Account Identifier',
 			name: 'minimaxAccount',
 			type: 'string',
 			default: '',
-			description: 'Account name to identify this Minimax account (required for registration)',
+			description: 'Account identifier for this Minimax account (this value must match the "account" parameter in API calls)',
 		},
 		{
 			displayName: 'Minimax API Token',
@@ -58,27 +58,7 @@ export class UseApiMinimax implements ICredentialType {
 				maxValue: 10,
 			},
 			description: 'Maximum number of parallel jobs (1-10)',
-		},
-		{
-			displayName: 'Webhook URL',
-			name: 'webhookUrl',
-			type: 'string',
-			default: '',
-			description: 'URL to receive webhook notifications when generation is complete',
-		},
-		{
-			displayName: 'Error Webhook URL',
-			name: 'errorWebhookUrl',
-			type: 'string',
-			default: '',
-			description: 'URL to receive webhook notifications when errors occur',
-		},
-		{
-			displayName: 'Registration Note',
-			name: 'registrationNote',
-			type: 'notice',
-			default: 'After saving these credentials, add a Minimax "Register Account" operation to register this account with UseAPI',
-		},
+		}
 	];
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
@@ -95,12 +75,10 @@ export class UseApiMinimax implements ICredentialType {
 			url: '/minimax/accounts/account',
 			method: 'POST',
 			body: {
-				name: '={{$credentials.minimaxAccount}}',
-				token: '={{$credentials.minimaxToken}}',
+				account: '={{$credentials.minimaxAccount}}',
 				url: '={{$credentials.minimaxUrl}}',
-				maxJobs: '={{$credentials.maxJobs}}',
-				webhookUrl: '={{$credentials.webhookUrl}}',
-				errorWebhookUrl: '={{$credentials.errorWebhookUrl}}'
+				token: '={{$credentials.minimaxToken}}',
+				maxJobs: '={{$credentials.maxJobs}}'
 			}
 		}
 	};

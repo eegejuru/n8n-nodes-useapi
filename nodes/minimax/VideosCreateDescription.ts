@@ -89,13 +89,6 @@ export const videosCreateFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Account',
-				name: 'account',
-				type: 'string',
-				default: '',
-				description: 'Specific MiniMax API account to use (if not specified, a random account will be selected)',
-			},
-			{
 				displayName: 'Prompt Optimization',
 				name: 'promptOptimization',
 				type: 'boolean',
@@ -117,15 +110,11 @@ export const videosCreateFields: INodeProperties[] = [
 				description: 'Custom reference ID to include in the callback',
 			},
 			{
-				displayName: 'Max Jobs',
-				name: 'maxJobs',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 10,
-				},
-				default: 1,
-				description: 'Maximum number of parallel jobs (1-10)',
+				displayName: 'FileID',
+				name: 'fileID',
+				type: 'string',
+				default: '',
+				description: 'fileID (uploaded via POST /files or existing GET /files)',
 			},
 		],
 	},

@@ -18,12 +18,6 @@ export const minimaxOperations: INodeProperties[] = [
 				description: 'Create a 5-second video using text/image prompt',
 				action: 'Create a video',
 			},
-			{
-				name: 'Register Account',
-				value: 'registerAccount',
-				description: 'Register your Minimax account with UseAPI',
-				action: 'Register account',
-			},
 		],
 		default: 'createVideo',
 	},

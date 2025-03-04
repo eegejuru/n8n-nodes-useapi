@@ -661,34 +661,6 @@ export class UseApi implements INodeType {
 							body: requestBody,
 							json: true,
 						});
-					} else if (operation === 'registerAccount') {
-						// Get credentials
-						const credentials = await this.getCredentials('useApiMinimax');
-						const token = credentials.apiKey as string;
-						
-						// Build request body from credential values
-						const requestBody: {[key: string]: any} = {
-							name: credentials.minimaxAccount || '',
-							token: credentials.minimaxToken || '',
-							url: credentials.minimaxUrl || '',
-							maxJobs: credentials.maxJobs || 1,
-						};
-						
-						// Add optional webhook URLs if provided
-						if (credentials.webhookUrl) requestBody.webhookUrl = credentials.webhookUrl;
-						if (credentials.errorWebhookUrl) requestBody.errorWebhookUrl = credentials.errorWebhookUrl;
-						
-						// Make the API request to register the account
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${BASE_URL_V1}/minimax/accounts/account`,
-							headers: {
-								'Authorization': `Bearer ${token}`,
-								'Content-Type': 'application/json',
-							},
-							body: requestBody,
-							json: true,
-						});
 					}
 				}
 
