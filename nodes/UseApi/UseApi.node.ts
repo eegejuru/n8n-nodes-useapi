@@ -116,6 +116,8 @@ export class UseApi implements INodeType {
 						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
 							mediaType?: string;
 							assetId?: string;
+							filterType?: string;
+							filterValue?: string;
 						};
 
 						// Build the query string directly
@@ -142,9 +144,23 @@ export class UseApi implements INodeType {
 							json: true,
 						});
 
-						// Filter by assetId if specified
-						if (additionalFields.assetId && responseData && Array.isArray(responseData.assets)) {
-							responseData.assets = responseData.assets.filter((asset: { id: string }) => asset.id === additionalFields.assetId);
+						// Filter results if specified
+						if (responseData && Array.isArray(responseData.assets)) {
+							const filterType = this.getNodeParameter('filterType', i, 'none') as string;
+							if (filterType !== 'none') {
+								const filterValue = this.getNodeParameter('filterValue', i, '') as string;
+								if (filterValue) {
+									responseData.assets = responseData.assets.filter((asset: any) => {
+										// Special handling for asset ID since it might need exact matching
+										if (filterType === 'id') {
+											return String(asset.id) === filterValue;
+										}
+										
+										// For other fields, allow partial matching
+										return String(asset[filterType])?.toLowerCase().includes(filterValue.toLowerCase());
+									});
+								}
+							}
 						}
 
 						// console.log('Response received');
@@ -857,7 +873,6 @@ export class UseApi implements INodeType {
 						// Get parameters
 						const account = this.getNodeParameter('account', i, '') as string;
 						const limit = this.getNodeParameter('limit', i, 10) as number;
-						const fileId = this.getNodeParameter('fileId', i, '') as string;
 						
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMinimax');
@@ -879,9 +894,27 @@ export class UseApi implements INodeType {
 							json: true,
 						});
 						
-						// Filter by fileId if specified
-						if (fileId && Array.isArray(responseData)) {
-							responseData = responseData.filter(file => file.file_id === fileId);
+						// Filter results if specified
+						if (responseData && Array.isArray(responseData)) {
+							const filterType = this.getNodeParameter('filterType', i, 'none') as string;
+							if (filterType !== 'none') {
+								const filterValue = this.getNodeParameter('filterValue', i, '') as string;
+								if (filterValue) {
+									responseData = responseData.filter(file => {
+										// Special handling for file_id since API might use a different property name
+										if (filterType === 'file_id') {
+											// Try different possible property names for file ID
+											return String(file.file_id) === filterValue || 
+												   String(file.fileId) === filterValue || 
+												   String(file.id) === filterValue;
+										}
+										
+										// For other fields, continue with the existing approach
+										return String(file[filterType]) === filterValue || 
+											   String(file[filterType])?.toLowerCase().includes(filterValue.toLowerCase());
+									});
+								}
+							}
 						}
 					}
 				}

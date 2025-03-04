@@ -123,6 +123,39 @@ export const runwayFields: INodeProperties[] = [
 		required: true,
 	},
 	{
+		displayName: 'Filter By',
+		name: 'filterType',
+		type: 'options',
+		options: [
+			{ name: 'None', value: 'none' },
+			{ name: 'Asset ID', value: 'id' },
+			{ name: 'Asset Name', value: 'name' },
+			{ name: 'Media Type', value: 'mediaType' }
+		],
+		default: 'none',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getAssets'],
+			},
+		},
+		description: 'Field to filter the results by',
+	},
+	{
+		displayName: 'Filter Value',
+		name: 'filterValue',
+		type: 'string',
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['runway'],
+				operation: ['getAssets'],
+				filterType: ['id', 'name', 'mediaType'],
+			},
+		},
+		description: 'Value to filter by',
+	},
+	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',
 		type: 'collection',
@@ -159,13 +192,6 @@ export const runwayFields: INodeProperties[] = [
 				],
 				default: '',
 				description: 'Type of media to filter results',
-			},
-			{
-				displayName: 'Asset ID',
-				name: 'assetId',
-				type: 'string',
-				default: '',
-				description: 'Optional asset ID to filter the results. If specified, only the asset with this ID will be returned.',
 			},
 		],
 	},
