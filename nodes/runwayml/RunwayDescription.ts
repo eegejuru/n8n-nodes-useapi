@@ -160,6 +160,13 @@ export const runwayFields: INodeProperties[] = [
 				default: '',
 				description: 'Type of media to filter results',
 			},
+			{
+				displayName: 'Asset ID',
+				name: 'assetId',
+				type: 'string',
+				default: '',
+				description: 'Optional asset ID to filter the results. If specified, only the asset with this ID will be returned.',
+			},
 		],
 	},
 

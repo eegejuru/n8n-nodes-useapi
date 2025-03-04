@@ -115,6 +115,7 @@ export class UseApi implements INodeType {
 						// Get optional parameters
 						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
 							mediaType?: string;
+							assetId?: string;
 						};
 
 						// Build the query string directly
@@ -140,6 +141,11 @@ export class UseApi implements INodeType {
 							},
 							json: true,
 						});
+
+						// Filter by assetId if specified
+						if (additionalFields.assetId && responseData && Array.isArray(responseData.assets)) {
+							responseData.assets = responseData.assets.filter((asset: { id: string }) => asset.id === additionalFields.assetId);
+						}
 
 						// console.log('Response received');
 
