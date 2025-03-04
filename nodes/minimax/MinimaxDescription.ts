@@ -13,38 +13,22 @@ export const minimaxOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Get Account Info',
-				value: 'getAccountInfo',
-				description: 'Get information about your Minimax account',
-				action: 'Get account information',
+				name: 'Create Video',
+				value: 'createVideo',
+				description: 'Create a 5-second video using text/image prompt',
+				action: 'Create a video',
+			},
+			{
+				name: 'Register Account',
+				value: 'registerAccount',
+				description: 'Register your Minimax account with UseAPI',
+				action: 'Register account',
 			},
 		],
-		default: 'getAccountInfo',
+		default: 'createVideo',
 	},
 ];
 
 export const minimaxFields: INodeProperties[] = [
-	// Fields for getAccountInfo operation
-	{
-		displayName: 'Additional Fields',
-		name: 'additionalFields',
-		type: 'collection',
-		placeholder: 'Add Field',
-		default: {},
-		displayOptions: {
-			show: {
-				resource: ['minimax'],
-				operation: ['getAccountInfo'],
-			},
-		},
-		options: [
-			{
-				displayName: 'Include Usage Stats',
-				name: 'includeUsageStats',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to include usage statistics',
-			},
-		],
-	},
+	// No additional fields needed for now
 ];

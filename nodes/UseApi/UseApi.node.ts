@@ -12,6 +12,7 @@ import { textToImageFields } from '../runwayml/TextToImageDescription';
 import { lipSyncFields } from '../runwayml/LipSyncDescription';
 import { videoToVideoFields } from '../runwayml/VideoToVideoDescription';
 import { minimaxFields, minimaxOperations } from '../minimax/MinimaxDescription';
+import { videosCreateFields } from '../minimax/VideosCreateDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -21,7 +22,7 @@ void BASE_URL_V2; // Prevent "unused variable" TypeScript error
 
 export class UseApi implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'UseAPI RunwayML',
+		displayName: 'UseAPI',
 		name: 'useApi',
 		icon: 'file:useapi.svg',
 		group: ['transform'],
@@ -80,6 +81,7 @@ export class UseApi implements INodeType {
 			...videoToVideoFields,
 			...minimaxOperations,
 			...minimaxFields,
+			...videosCreateFields,
 		],
 	};
 
@@ -607,6 +609,84 @@ export class UseApi implements INodeType {
 							headers: {
 								'Authorization': `Bearer ${token}`,
 							},
+							json: true,
+						});
+					} else if (operation === 'createVideo') {
+						// Get input type
+						const inputType = this.getNodeParameter('inputType', i) as string;
+
+						// Build request body
+						const requestBody: {[key: string]: any} = {};
+
+						// Add text prompt (optional but commonly used)
+						const prompt = this.getNodeParameter('prompt', i, '') as string;
+						if (prompt) requestBody.prompt = prompt;
+
+						// Add image fileID if using image input
+						if (inputType === 'imageText') {
+							requestBody.fileID = this.getNodeParameter('fileID', i) as string;
+						}
+
+						// Add model selection
+						requestBody.model = this.getNodeParameter('model', i) as string;
+
+						// Get additional options
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							account?: string;
+							promptOptimization?: boolean;
+							replyUrl?: string;
+							replyRef?: string;
+							maxJobs?: number;
+						};
+
+						// Add additional options if provided
+						if (additionalOptions.account) requestBody.account = additionalOptions.account;
+						if (additionalOptions.promptOptimization !== undefined) requestBody.promptOptimization = additionalOptions.promptOptimization;
+						if (additionalOptions.replyUrl) requestBody.replyUrl = additionalOptions.replyUrl;
+						if (additionalOptions.replyRef) requestBody.replyRef = additionalOptions.replyRef;
+						if (additionalOptions.maxJobs) requestBody.maxJobs = additionalOptions.maxJobs;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+
+						// Make the API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/minimax/videos/create`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
+							json: true,
+						});
+					} else if (operation === 'registerAccount') {
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+						
+						// Build request body from credential values
+						const requestBody: {[key: string]: any} = {
+							name: credentials.minimaxAccount || '',
+							token: credentials.minimaxToken || '',
+							url: credentials.minimaxUrl || '',
+							maxJobs: credentials.maxJobs || 1,
+						};
+						
+						// Add optional webhook URLs if provided
+						if (credentials.webhookUrl) requestBody.webhookUrl = credentials.webhookUrl;
+						if (credentials.errorWebhookUrl) requestBody.errorWebhookUrl = credentials.errorWebhookUrl;
+						
+						// Make the API request to register the account
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V1}/minimax/accounts/account`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body: requestBody,
 							json: true,
 						});
 					}
