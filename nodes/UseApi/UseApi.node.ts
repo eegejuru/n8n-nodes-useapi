@@ -11,6 +11,7 @@ import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
 import { textToImageFields } from '../runwayml/TextToImageDescription';
 import { lipSyncFields } from '../runwayml/LipSyncDescription';
 import { videoToVideoFields } from '../runwayml/VideoToVideoDescription';
+import { minimaxFields, minimaxOperations } from '../minimax/MinimaxDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -36,6 +37,20 @@ export class UseApi implements INodeType {
 			{
 				name: 'useApiApi',
 				required: true,
+				displayOptions: {
+					show: {
+						resource: ['runway'],
+					},
+				},
+			},
+			{
+				name: 'useApiMinimax',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['minimax'],
+					},
+				},
 			},
 		],
 		properties: [
@@ -49,6 +64,10 @@ export class UseApi implements INodeType {
 						name: 'Runway',
 						value: 'runway',
 					},
+					{
+						name: 'Minimax',
+						value: 'minimax',
+					},
 				],
 				default: 'runway',
 			},
@@ -59,6 +78,8 @@ export class UseApi implements INodeType {
 			...textToImageFields,
 			...lipSyncFields,
 			...videoToVideoFields,
+			...minimaxOperations,
+			...minimaxFields,
 		],
 	};
 
@@ -558,6 +579,34 @@ export class UseApi implements INodeType {
 								'Content-Type': 'application/json',
 							},
 							body: requestBody,
+							json: true,
+						});
+					}
+				} else if (resource === 'minimax') {
+					if (operation === 'getAccountInfo') {
+						// Get optional parameters
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as {
+							includeUsageStats?: boolean;
+						};
+
+						// Build the query string
+						let queryString = '';
+						if (additionalFields.includeUsageStats) queryString += '?includeUsageStats=true';
+
+						// Construct URL
+						const fullUrl = `${BASE_URL_V1}/minimax/account${queryString}`;
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMinimax');
+						const token = credentials.apiKey as string;
+
+						// Make request
+						responseData = await this.helpers.request({
+							method: 'GET',
+							url: fullUrl,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
 							json: true,
 						});
 					}
