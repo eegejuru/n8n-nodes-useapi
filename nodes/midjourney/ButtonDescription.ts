@@ -21,14 +21,15 @@ export const buttonFields: INodeProperties[] = [
     type: 'string',
     default: '',
     required: true,
-    placeholder: 'U1, V1, etc.',
+    placeholder: 'Example: U1, V2, Upscale (2x)',
     displayOptions: {
       show: {
         resource: ['midjourney'],
         operation: ['button'],
       },
     },
-    description: 'Button from buttons array of the referenced job (U1, U2, V1, V2, etc.)',
+    description: 'Button from buttons array of the referenced job. Common values include: U1-U4, V1-V4, ⬅️, ➡️, ⬆️, ⬇️, 🔄, Vary (Region), Vary (Strong), Vary (Subtle), Zoom Out 1.5x, Zoom Out 2x, Upscale variants, Make Square, Make Variations, Remaster, Custom Zoom',
+    hint: 'First use "Get Job" operation to see the exact available buttons for your specific job ID',
   },
   {
     displayName: 'Additional Options',

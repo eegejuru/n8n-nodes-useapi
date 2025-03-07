@@ -30,7 +30,7 @@ export const midjourneyOperations: INodeProperties[] = [
 			{
 				name: 'Button',
 				value: 'button',
-				description: 'Execute a button command on a Midjourney job',
+				description: 'Execute a button command on a Midjourney job (first use Get Job to see available buttons)',
 				action: 'Execute a button command',
 			},
 		],
