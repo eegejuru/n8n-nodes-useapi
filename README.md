@@ -41,7 +41,7 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 ## Version history
 
 ### 0.1.6
-- Starting to add MidJourney.
+- MidJourney Imagine, Button U1, U2 etc, Get Job Status.
 
 ### 0.1.5
 - Renamed nodes to be more easy to regognize.
