@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-useapi",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Ability to use multiple Midjourney, Riffusion, Mureka, Runway, MiniMax, InsightFaceSwap, Pika and PixVerse accounts complete with automated load balancing.",
   "keywords": [
     "n8n-community-node-package",
@@ -42,7 +42,8 @@
     "n8nNodesApiVersion": 1,
     "credentials": [
       "dist/credentials/UseApiApi.credentials.js",
-      "dist/credentials/UseApiMinimax.credentials.js"
+      "dist/credentials/UseApiMinimax.credentials.js",
+      "dist/credentials/UseApiMidjourney.credentials.js"
     ],
     "nodes": [
       "dist/nodes/UseApi/UseApi.node.js"

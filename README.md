@@ -10,8 +10,8 @@ Implementing in this nodes the following services, via the useapi.net API:
 - Midjourney (not started yet)
 - Riffusion (not started yet)
 - Mureka (not started yet)
-- Runway (in progress)
-- MiniMax (not started yet)
+- Runway
+- MiniMax
 - PixVerse (not started yet)
 - InsightFaceSwap (not started yet)
 - Pika (not started yet)
@@ -40,7 +40,10 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
-### 0.1.4
+### 0.1.6
+- Starting to add MidJourney.
+
+### 0.1.5
 - Renamed nodes to be more easy to regognize.
 - Added create account in UseNet APi as needed, to not create online.
 - Started to add Minimax nodes (Create video and Get video).
