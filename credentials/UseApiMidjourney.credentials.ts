@@ -16,6 +16,7 @@ export class UseApiMidjourney implements ICredentialType {
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
+			required: true,
 			description: 'UseAPI API Key',
 		},
 		{
@@ -44,8 +45,8 @@ export class UseApiMidjourney implements ICredentialType {
 			displayName: 'Max Jobs',
 			name: 'maxJobs',
 			type: 'number',
-			default: 1,
-			description: 'Maximum number of concurrent jobs (1-15)',
+			default: 3,
+			description: 'Maximum number of concurrent jobs (3 for Basic/Standard plans, up to 15 for Pro/Mega plans)',
 		},
 	];
 	authenticate: IAuthenticateGeneric = {
