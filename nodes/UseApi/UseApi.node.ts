@@ -18,6 +18,8 @@ import { accountCreateFields } from '../minimax/AccountCreateDescription';
 import { videosRetrieveFields } from '../minimax/VideosRetrieveDescription';
 import { filesCreateFields } from '../minimax/FilesCreateDescription';
 import { filesListFields } from '../minimax/FilesListDescription';
+import { imagineFields } from '../midjourney/ImagineDescription';
+import { midjourneyOperations } from '../midjourney/MidjourneyDescription';
 
 // Define base URL constants
 const BASE_URL_V1 = 'https://api.useapi.net/v1'; // For API operations (RunwayML assets, etc.)
@@ -58,6 +60,15 @@ export class UseApi implements INodeType {
 					},
 				},
 			},
+			{
+				name: 'useApiMidjourney',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['midjourney'],
+					},
+				},
+			},
 		],
 		properties: [
 			{
@@ -73,6 +84,10 @@ export class UseApi implements INodeType {
 					{
 						name: 'Minimax',
 						value: 'minimax',
+					},
+					{
+						name: 'Midjourney',
+						value: 'midjourney',
 					},
 				],
 				default: 'runway',
@@ -92,6 +107,8 @@ export class UseApi implements INodeType {
 			...videosRetrieveFields,
 			...filesCreateFields,
 			...filesListFields,
+			...imagineFields,
+			...midjourneyOperations,
 		],
 	};
 
@@ -155,7 +172,7 @@ export class UseApi implements INodeType {
 										if (filterType === 'id') {
 											return String(asset.id) === filterValue;
 										}
-										
+
 										// For other fields, allow partial matching
 										return String(asset[filterType])?.toLowerCase().includes(filterValue.toLowerCase());
 									});
@@ -618,30 +635,30 @@ export class UseApi implements INodeType {
 					} else if (operation === 'createAccount') {
 						// Check confirmation
 						const confirmRegistration = this.getNodeParameter('confirmRegistration', i) as boolean;
-						
+
 						if (!confirmRegistration) {
 							throw new NodeOperationError(this.getNode(), 'Operation cancelled: Please confirm the registration by checking the confirmation checkbox.', { itemIndex: i });
 						}
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiApi');
 						const apiToken = credentials.apiKey as string;
 						const runwayEmail = credentials.runwayEmail as string;
 						const runwayPassword = credentials.runwayPassword as string;
 						const maxJobs = 5; // Default value
-						
+
 						// Validate required credential fields
 						if (!runwayEmail || !runwayPassword) {
 							throw new NodeOperationError(this.getNode(), 'Missing required credential fields: Please ensure "Runway Email" and "Runway Password" are set in your credentials.', { itemIndex: i });
 						}
-						
+
 						// Create request body
 						const requestBody = {
 							email: runwayEmail,
 							password: runwayPassword,
 							maxJobs: maxJobs,
 						};
-						
+
 						// Make API request
 						responseData = await this.helpers.request({
 							method: 'POST',
@@ -774,11 +791,11 @@ export class UseApi implements INodeType {
 					} else if (operation === 'retrieveVideo') {
 						// Get the video ID
 						const videoId = this.getNodeParameter('videoId', i) as string;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMinimax');
 						const token = credentials.apiKey as string;
-						
+
 						// Make API request
 						responseData = await this.helpers.request({
 							method: 'GET',
@@ -791,41 +808,41 @@ export class UseApi implements INodeType {
 					} else if (operation === 'uploadFile') {
 						// Get account parameter (optional)
 						const account = this.getNodeParameter('account', i, '') as string;
-						
+
 						// Get input type
 						const inputType = this.getNodeParameter('inputType', i) as string;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMinimax');
 						const token = credentials.apiKey as string;
-						
+
 						// Build URL with optional account parameter
 						let url = `${BASE_URL_V1}/minimax/files/`;
 						if (account) {
 							url += `?account=${encodeURIComponent(account)}`;
 						}
-						
+
 						let binaryData;
 						let contentType;
-						
+
 						if (inputType === 'binaryData') {
 							// Get binary data from the specified property
 							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-							
+
 							if (!items[i].binary) {
 								throw new NodeApiError(this.getNode(), { message: 'No binary data found' });
 							}
-							
+
 							const binary = items[i].binary!;
-							
+
 							if (!(binaryPropertyName in binary)) {
 								throw new NodeApiError(this.getNode(), { message: `No binary data found in property "${binaryPropertyName}"` });
 							}
-							
+
 							const binaryProperty = binary[binaryPropertyName];
 							binaryData = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
 							contentType = binaryProperty.mimeType;
-							
+
 							// Make sure content type is acceptable for Minimax
 							if (!contentType.startsWith('image/')) {
 								throw new NodeApiError(this.getNode(), { message: `Invalid content type: ${contentType}. Only image files are supported.` });
@@ -833,19 +850,19 @@ export class UseApi implements INodeType {
 						} else if (inputType === 'url') {
 							// Download file from URL
 							const imageUrl = this.getNodeParameter('url', i) as string;
-							
+
 							// Download the file
 							const response = await this.helpers.request({
 								method: 'GET',
 								url: imageUrl,
 								encoding: null, // Get the response as a Buffer
 							});
-							
+
 							binaryData = response;
-							
+
 							// Try to determine content type from URL extension
 							const fileExtension = imageUrl.split('.').pop()?.toLowerCase();
-							
+
 							if (fileExtension === 'png') {
 								contentType = 'image/png';
 							} else if (['jpg', 'jpeg'].includes(fileExtension || '')) {
@@ -857,7 +874,7 @@ export class UseApi implements INodeType {
 								contentType = 'image/jpeg';
 							}
 						}
-						
+
 						// Make the API request to upload the file
 						responseData = await this.helpers.request({
 							method: 'POST',
@@ -873,17 +890,17 @@ export class UseApi implements INodeType {
 						// Get parameters
 						const account = this.getNodeParameter('account', i, '') as string;
 						const limit = this.getNodeParameter('limit', i, 10) as number;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMinimax');
 						const token = credentials.apiKey as string;
-						
+
 						// Build URL with parameters
 						let url = `${BASE_URL_V1}/minimax/files/?limit=${limit}`;
 						if (account) {
 							url += `&account=${encodeURIComponent(account)}`;
 						}
-						
+
 						// Make API request
 						responseData = await this.helpers.request({
 							method: 'GET',
@@ -893,7 +910,7 @@ export class UseApi implements INodeType {
 							},
 							json: true,
 						});
-						
+
 						// Filter results if specified
 						if (responseData && Array.isArray(responseData)) {
 							const filterType = this.getNodeParameter('filterType', i, 'none') as string;
@@ -904,18 +921,98 @@ export class UseApi implements INodeType {
 										// Special handling for file_id since API might use a different property name
 										if (filterType === 'file_id') {
 											// Try different possible property names for file ID
-											return String(file.file_id) === filterValue || 
-												   String(file.fileId) === filterValue || 
+											return String(file.file_id) === filterValue ||
+												   String(file.fileId) === filterValue ||
 												   String(file.id) === filterValue;
 										}
-										
+
 										// For other fields, continue with the existing approach
-										return String(file[filterType]) === filterValue || 
+										return String(file[filterType]) === filterValue ||
 											   String(file[filterType])?.toLowerCase().includes(filterValue.toLowerCase());
 									});
 								}
 							}
 						}
+					}
+				} else if (resource === 'midjourney') {
+					// *********************************************************************
+					//                            midjourney
+					// *********************************************************************
+
+					if (operation === 'imagine') {
+						// Get parameters
+						const prompt = this.getNodeParameter('prompt', i) as string;
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							maxJobs?: number;
+							replyUrl?: string;
+							replyRef?: string;
+							discord?: string;
+							server?: string;
+							channel?: string;
+						};
+
+						// Get credentials
+						const credentials = await this.getCredentials('useApiMidjourney');
+						const token = credentials.apiKey as string;
+
+						// Prepare request body
+						const body: {
+							prompt: string;
+							discord?: string;
+							server?: string;
+							channel?: string;
+							maxJobs?: number;
+							replyUrl?: string;
+							replyRef?: string;
+						} = {
+							prompt,
+						};
+
+						// Add optional parameters if provided
+						if (additionalOptions.maxJobs) {
+							body.maxJobs = additionalOptions.maxJobs;
+						} else if (credentials.maxJobs) {
+							body.maxJobs = credentials.maxJobs as number;
+						}
+
+						if (additionalOptions.replyUrl) {
+							body.replyUrl = additionalOptions.replyUrl;
+						}
+
+						if (additionalOptions.replyRef) {
+							body.replyRef = additionalOptions.replyRef;
+						}
+
+						// Add Discord credentials (with overrides if provided)
+						if (additionalOptions.discord) {
+							body.discord = additionalOptions.discord;
+						} else if (credentials.discordToken) {
+							body.discord = credentials.discordToken as string;
+						}
+
+						if (additionalOptions.server) {
+							body.server = additionalOptions.server;
+						} else if (credentials.discordServer) {
+							body.server = credentials.discordServer as string;
+						}
+
+						if (additionalOptions.channel) {
+							body.channel = additionalOptions.channel;
+						} else if (credentials.discordChannel) {
+							body.channel = credentials.discordChannel as string;
+						}
+
+						// Make API request
+						responseData = await this.helpers.request({
+							method: 'POST',
+							url: `${BASE_URL_V2}/jobs/imagine`,
+							headers: {
+								'Authorization': `Bearer ${token}`,
+								'Content-Type': 'application/json',
+							},
+							body,
+							json: true,
+						});
 					}
 				}
 
