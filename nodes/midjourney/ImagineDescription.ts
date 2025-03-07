@@ -32,17 +32,6 @@ export const imagineFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Max Jobs',
-				name: 'maxJobs',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 15,
-				},
-				default: 3,
-				description: 'Maximum number of concurrent jobs (1-15 depending on your Midjourney plan)',
-			},
-			{
 				displayName: 'Reply URL',
 				name: 'replyUrl',
 				type: 'string',
@@ -55,27 +44,6 @@ export const imagineFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Your reference ID which will be returned with this job response/result',
-			},
-			{
-				displayName: 'Discord Token',
-				name: 'discord',
-				type: 'string',
-				default: '',
-				description: 'Override the Discord token from credentials (optional)',
-			},
-			{
-				displayName: 'Discord Server ID',
-				name: 'server',
-				type: 'string',
-				default: '',
-				description: 'Override the Discord server ID from credentials (optional)',
-			},
-			{
-				displayName: 'Discord Channel ID',
-				name: 'channel',
-				type: 'string',
-				default: '',
-				description: 'Override the Discord channel ID from credentials (optional)',
 			},
 		],
 	},
