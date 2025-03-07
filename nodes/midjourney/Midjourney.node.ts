@@ -120,6 +120,79 @@ export class Midjourney implements INodeType {
 								json: true,
 							},
 						);
+					} else if (operation === 'getJob') {
+						// Get the job ID
+						const jobId = this.getNodeParameter('jobId', i) as string;
+						
+						// Make API request
+						responseData = await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'useApiMidjourney',
+							{
+								method: 'GET',
+								url: `/jobs/?jobid=${jobId}`,
+								json: true,
+							},
+						);
+					} else if (operation === 'button') {
+						// Get parameters
+						const jobId = this.getNodeParameter('jobId', i) as string;
+						const button = this.getNodeParameter('button', i) as string;
+						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							prompt?: string;
+							replyUrl?: string;
+							replyRef?: string;
+							maxJobs?: number;
+							discord?: string;
+						};
+
+						// Prepare request body
+						const body: {
+							jobid: string;
+							button: string;
+							prompt?: string;
+							discord?: string;
+							maxJobs?: number;
+							replyUrl?: string;
+							replyRef?: string;
+						} = {
+							jobid: jobId,
+							button: button,
+						};
+
+						// Add optional parameters if provided
+						if (additionalOptions.prompt) {
+							body.prompt = additionalOptions.prompt;
+						}
+
+						if (additionalOptions.maxJobs) {
+							body.maxJobs = additionalOptions.maxJobs;
+						}
+
+						if (additionalOptions.replyUrl) {
+							body.replyUrl = additionalOptions.replyUrl;
+						}
+
+						if (additionalOptions.replyRef) {
+							body.replyRef = additionalOptions.replyRef;
+						}
+
+						// Add Discord token if provided
+						if (additionalOptions.discord) {
+							body.discord = additionalOptions.discord;
+						}
+
+						// Make API request
+						responseData = await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'useApiMidjourney',
+							{
+								method: 'POST',
+								url: '/jobs/button',
+								body,
+								json: true,
+							},
+						);
 					}
 				}
 
