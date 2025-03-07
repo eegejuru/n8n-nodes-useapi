@@ -51,6 +51,7 @@ export class Midjourney implements INodeType {
 						// Get parameters
 						const prompt = this.getNodeParameter('prompt', i) as string;
 						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as {
+							aspectRatio?: string;
 							maxJobs?: number;
 							replyUrl?: string;
 							replyRef?: string;
@@ -62,6 +63,12 @@ export class Midjourney implements INodeType {
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMidjourney');
 
+						// Process prompt with aspect ratio if provided
+						let finalPrompt = prompt;
+						if (additionalOptions.aspectRatio) {
+							finalPrompt = `${prompt} --ar ${additionalOptions.aspectRatio}`;
+						}
+
 						// Prepare request body
 						const body: {
 							prompt: string;
@@ -72,7 +79,7 @@ export class Midjourney implements INodeType {
 							replyUrl?: string;
 							replyRef?: string;
 						} = {
-							prompt,
+							prompt: finalPrompt,
 						};
 
 						// Add optional parameters if provided

@@ -32,6 +32,21 @@ export const imagineFields: INodeProperties[] = [
 		},
 		options: [
 			{
+				displayName: 'Aspect Ratio',
+				name: 'aspectRatio',
+				type: 'options',
+				options: [
+					{ name: '16:9 (Landscape)', value: '16:9' },
+					{ name: '21:9 (Widescreen)', value: '21:9' },
+					{ name: '1:1 (Square)', value: '1:1' },
+					{ name: '9:16 (Portrait)', value: '9:16' },
+					{ name: '4:3', value: '4:3' },
+					{ name: '3:4', value: '3:4' },
+				],
+				default: '',
+				description: 'Set the aspect ratio for the generated image',
+			},
+			{
 				displayName: 'Reply URL',
 				name: 'replyUrl',
 				type: 'string',
