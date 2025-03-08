@@ -1,13 +1,26 @@
 #!/bin/bash
-# build.sh - Build n8n-nodes-useapi and copy to n8n custom directory
+# build.sh - Build n8n custom node and copy to n8n custom directory
+
+# Set project name - change this for different modules
+PROJECT_NAME="useapi"
 
 # Set your project directory
-PROJECT_DIR=~/n8n_dev/n8n-nodes-useapi
-N8N_CUSTOM_DIR=~/.n8n/custom
+PROJECT_DIR=~/n8n_dev/n8n-nodes-${PROJECT_NAME}
+N8N_CUSTOM_DIR=~/.n8n/custom/n8n-nodes-${PROJECT_NAME}
 
 # Change to project directory
 echo "Changing to project directory: $PROJECT_DIR"
 cd $PROJECT_DIR || { echo "Error: Could not change to project directory"; exit 1; }
+
+# Check if node_modules exists, if not install dependencies
+if [ ! -d "node_modules" ]; then
+  echo "node_modules not found, installing dependencies..."
+  pnpm install
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to install dependencies"
+    exit 1
+  fi
+fi
 
 # Check for --build flag
 if [ "$1" = "--build" ]; then
