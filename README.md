@@ -34,12 +34,28 @@ I am not affiliated in any way with useapi.net. Drop me a note if you have any q
 - **Image to video**: Convert images into videos with RunwayML RunGen3 Turbo
 - **Describe image**: Describe an image using RunwayML's image captioning model.
 - **Assets listing**: List all assets available on RunwayML.
+- **Video to video (experimental)**: Convert a video into another video using RunwayML RunGen3 Turbo.
+- **Lipsync**: Generate lip sync animation using RunwayML's lip sync model.
+- **Instant image generation**: Generate an image using RunwayML's Instant Generation model.
+
+### Midjourney
+- **Imagine**: Generate images using Midjourney.
+- **Retrieve job status**: Retrieve the status of a job.
+- **Upscale**: Upscale an image using Midjourney.
+
+### Minimax
+- **Create video**: Create a video using Minimax.
+- **Retrieve video**: Get a video using Minimax.
+- **Upload a file**: Upload a file to Minimax.
 
 ## Credentials
 
 You will need an API key from useapi.net to use this node. Add the API key to the credentials section in the settings of the node.
 
 ## Version history
+
+### 0.1.8
+- Updated readme.
 
 ### 0.1.8
 - Gulp to v 5.0
