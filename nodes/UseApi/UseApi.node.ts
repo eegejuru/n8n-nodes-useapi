@@ -4,7 +4,10 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	NodeApiError,
-	NodeOperationError
+	NodeOperationError,
+	NodeConnectionType,
+	INodeInputConfiguration,
+	INodeOutputConfiguration
 } from 'n8n-workflow';
 import { runwayFields, runwayOperations } from '../runwayml/RunwayDescription';
 import { gen3TurboFields } from '../runwayml/Gen3TurboDescription';
@@ -41,8 +44,8 @@ export class UseApi implements INodeType {
 		defaults: {
 			name: 'UseAPI',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: ['main'] as (NodeConnectionType | INodeInputConfiguration)[],
+		outputs: ['main'] as (NodeConnectionType | INodeOutputConfiguration)[],
 		credentials: [
 			{
 				name: 'useApiApi',
@@ -1027,11 +1030,11 @@ export class UseApi implements INodeType {
 					} else if (operation === 'getJob') {
 						// Get the job ID
 						const jobId = this.getNodeParameter('jobId', i) as string;
-						
+
 						// Get credentials
 						const credentials = await this.getCredentials('useApiMidjourney');
 						const token = credentials.apiKey as string;
-						
+
 						// Make API request
 						responseData = await this.helpers.request({
 							method: 'GET',

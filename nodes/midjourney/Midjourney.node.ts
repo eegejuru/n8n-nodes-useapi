@@ -4,6 +4,11 @@ import {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
+import type {
+	NodeConnectionType,
+	INodeInputConfiguration,
+	INodeOutputConfiguration
+} from 'n8n-workflow';
 import { midjourneyFields, midjourneyOperations } from './MidjourneyDescription';
 
 export class Midjourney implements INodeType {
@@ -18,8 +23,8 @@ export class Midjourney implements INodeType {
 		defaults: {
 			name: 'Midjourney',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: ['main'] as (NodeConnectionType | INodeInputConfiguration)[],
+		outputs: ['main'] as (NodeConnectionType | INodeOutputConfiguration)[],
 		credentials: [
 			{
 				name: 'useApiMidjourney',

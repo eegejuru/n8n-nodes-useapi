@@ -8,7 +8,6 @@ import {
 export class UseApiMinimax implements ICredentialType {
 	name = 'useApiMinimax';
 	displayName = 'UseAPI Minimax Credentials';
-	icon = 'file:minimax.svg';
 	documentationUrl = 'https://useapi.net/docs/start-here/setup-minimax';
 	properties: INodeProperties[] = [
 		{
