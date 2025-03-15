@@ -54,7 +54,7 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
-### 0.1.8
+### 0.1.9
 - Updated readme.
 
 ### 0.1.8
