@@ -54,6 +54,9 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
+### 0.2.1
+- Updated axios in n8n-workflow
+
 ### 0.2.0
 - Updated packages to latest.
 - Updated codes to new packages.
