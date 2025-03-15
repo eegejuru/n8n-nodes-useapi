@@ -7,14 +7,15 @@
 This n8n community node enables seamless integration of **[useapi.net](http://useapi.net) in your [n8n](https://n8n.io) workflows**.
 
 Implementing in this nodes the following services, via the useapi.net API:
-- Midjourney (not started yet)
-- Riffusion (not started yet)
-- Mureka (not started yet)
+- Midjourney
 - Runway
 - MiniMax
+- Pika (not started yet)
+- Riffusion (not started yet)
+- Mureka (not started yet)
 - PixVerse (not started yet)
 - InsightFaceSwap (not started yet)
-- Pika (not started yet)
+
 
 ## Installation
 
@@ -39,6 +40,9 @@ I am not affiliated in any way with useapi.net. Drop me a note if you have any q
 You will need an API key from useapi.net to use this node. Add the API key to the credentials section in the settings of the node.
 
 ## Version history
+
+### 0.1.7
+- Small bugs fixed.
 
 ### 0.1.6
 - MidJourney Imagine, Button U1, U2 etc, Get Job Status.
