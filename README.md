@@ -41,6 +41,9 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
+### 0.1.8
+- Gulp to v 5.0
+
 ### 0.1.7
 - Small bugs fixed.
 
