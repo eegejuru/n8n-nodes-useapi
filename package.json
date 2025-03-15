@@ -62,9 +62,13 @@
     "typescript": "~5.8.2"
   },
   "dependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2"
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "axios": "^1.8.3"
   },
   "pnpm": {
+    "overrides": {
+    "axios": "1.8.3"
+    },
     "ignoredBuiltDependencies": [
       "eslint-plugin-n8n-nodes-base"
     ],
