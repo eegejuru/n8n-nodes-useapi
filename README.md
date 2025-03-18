@@ -54,6 +54,10 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 
 ## Version history
 
+### 0.2.2
+- Move some constants to shared external file to reuse in other nodes.
+- Minimax Create, Get, Delete images.
+
 ### 0.2.1
 - Updated axios in n8n-workflow
 

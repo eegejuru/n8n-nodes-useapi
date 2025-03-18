@@ -1,10 +1,5 @@
 import { INodeProperties } from 'n8n-workflow';
-
-/**
- * Defines valid aspect ratio values as a TypeScript union type
- * This ensures type safety and easier refactoring when adding/removing options
- */
-type AspectRatioOption = '16:9' | '21:9' | '1:1' | '9:16' | '4:3' | '3:4';
+import { AspectRatioOption, ASPECT_RATIO_OPTIONS } from '../constants/shared';
 
 /**
  * Constants used throughout the Midjourney integration
@@ -66,14 +61,7 @@ export const imagineFields: INodeProperties[] = [
 				displayName: 'Aspect Ratio',
 				name: 'aspectRatio',
 				type: 'options',
-				options: [
-					{ name: '16:9 (Landscape)', value: '16:9' as AspectRatioOption },
-					{ name: '21:9 (Widescreen)', value: '21:9' as AspectRatioOption },
-					{ name: '1:1 (Square)', value: '1:1' as AspectRatioOption },
-					{ name: '9:16 (Portrait)', value: '9:16' as AspectRatioOption },
-					{ name: '4:3', value: '4:3' as AspectRatioOption },
-					{ name: '3:4', value: '3:4' as AspectRatioOption },
-				],
+				options: ASPECT_RATIO_OPTIONS,
 				default: '' as AspectRatioOption | '',
 				description: 'Set the aspect ratio for the generated image',
 			},
