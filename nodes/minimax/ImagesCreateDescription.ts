@@ -36,13 +36,6 @@ export const imagesCreateFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Account',
-				name: 'account',
-				type: 'string',
-				default: '',
-				description: 'MiniMax API account (required if you have multiple accounts configured)',
-			},
-			{
 				displayName: 'Prompt Optimization',
 				name: 'promptOptimization',
 				type: 'boolean',

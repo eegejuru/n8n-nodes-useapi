@@ -17,13 +17,6 @@ export const imagesListFields: INodeProperties[] = [
     },
     options: [
       {
-        displayName: 'Account',
-        name: 'account',
-        type: 'string',
-        default: '',
-        description: 'MiniMax API account (required if you have multiple accounts configured)',
-      },
-      {
         displayName: 'Limit',
         name: 'limit',
         type: 'number',

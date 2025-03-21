@@ -1,10 +1,8 @@
 import { INodeProperties } from 'n8n-workflow';
 import {
-  IMAGES_LIST_OPERATION,
   IMAGES_RETRIEVE_OPERATION,
   IMAGES_CREATE_OPERATION,
   imagesCreateFields,
-  imagesListFields,
   imagesRetrieveFields,
 } from '.';
 
@@ -39,16 +37,16 @@ export const minimaxOperations: INodeProperties[] = [
 				action: 'Create a video',
 			},
 			{
-				name: 'List Files',
-				value: 'listFiles',
-				description: 'Get a list of uploaded files',
-				action: 'List files',
+				name: 'List Videos',
+				value: 'listVideos',
+				description: 'Get a list of uploaded video files',
+				action: 'List Videos',
 			},
 			{
 				name: 'List Images',
-				value: IMAGES_LIST_OPERATION,
-				description: 'Get a list of generated images',
-				action: 'List images',
+				value: 'listImages',
+				description: 'Get a list of uploaded image files',
+				action: 'List Images',
 			},
 			{
 				name: 'Retrieve Image',
@@ -75,6 +73,5 @@ export const minimaxOperations: INodeProperties[] = [
 
 export const minimaxFields: INodeProperties[] = [
 	...imagesCreateFields,
-	...imagesListFields,
 	...imagesRetrieveFields,
 ];
