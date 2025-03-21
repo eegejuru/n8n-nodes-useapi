@@ -57,6 +57,7 @@ You will need an API key from useapi.net to use this node. Add the API key to th
 ### 0.2.2
 - Move some constants to shared external file to reuse in other nodes.
 - Minimax Create, Get, Delete images.
+- Now in Create video will load models based on Input Type.
 
 ### 0.2.1
 - Updated axios in n8n-workflow

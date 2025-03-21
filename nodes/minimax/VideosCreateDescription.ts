@@ -53,27 +53,45 @@ export const videosCreateFields: INodeProperties[] = [
 		},
 		description: 'ID of the uploaded image to use (format: user:user_id-minimax:account-file:file_id)',
 	},
-	// Model selection
+	// Text-to-Video model selection (only shown for text input)
 	{
 		displayName: 'Model',
 		name: 'model',
 		type: 'options',
 		options: [
 			{ name: 'T2V-01 (Text-to-Video)', value: 'T2V-01' },
-			{ name: 'I2V-01 (Image-to-Video)', value: 'I2V-01' },
-			{ name: 'I2V-01-live (Image-to-Video, Live)', value: 'I2V-01-live' },
-			{ name: 'S2V-01 (Subject Reference)', value: 'S2V-01' },
 			{ name: 'T2V-01-Director (Text-to-Video Director)', value: 'T2V-01-Director' },
-			{ name: 'I2V-01-Director (Image-to-Video Director)', value: 'I2V-01-Director' },
 		],
 		default: 'T2V-01',
 		displayOptions: {
 			show: {
 				resource: ['minimax'],
 				operation: ['createVideo'],
+				inputType: ['textOnly'],
 			},
 		},
-		description: 'Model to use for video generation',
+		description: 'Model to use for text-to-video generation',
+	},
+	// Image-to-Video model selection (only shown for image input)
+	{
+		displayName: 'Model',
+		name: 'model',
+		type: 'options',
+		options: [
+			{ name: 'I2V-01 (Image-to-Video)', value: 'I2V-01' },
+			{ name: 'I2V-01-live (Image-to-Video, Live)', value: 'I2V-01-live' },
+			{ name: 'I2V-01-Director (Image-to-Video Director)', value: 'I2V-01-Director' },
+			{ name: 'S2V-01 (Subject Reference)', value: 'S2V-01' },
+		],
+		default: 'I2V-01',
+		displayOptions: {
+			show: {
+				resource: ['minimax'],
+				operation: ['createVideo'],
+				inputType: ['imageText'],
+			},
+		},
+		description: 'Model to use for image-to-video generation',
 	},
 	{
 		displayName: 'Additional Options',
