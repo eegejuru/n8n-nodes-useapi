@@ -1,10 +1,12 @@
 import { INodeProperties } from 'n8n-workflow';
 import {
   IMAGES_RETRIEVE_OPERATION,
+  imagesRetrieveFields,
+} from './ImagesRetrieveDescription';
+import {
   IMAGES_CREATE_OPERATION,
   imagesCreateFields,
-  imagesRetrieveFields,
-} from '.';
+} from './ImagesCreateDescription';
 
 export const minimaxOperations: INodeProperties[] = [
 	{
