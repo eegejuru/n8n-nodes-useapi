@@ -114,6 +114,17 @@ export const videosCreateFields: INodeProperties[] = [
 				description: 'Whether to optimize the provided prompt',
 			},
 			{
+				displayName: 'Quantity',
+				name: 'quantity',
+				type: 'number',
+				typeOptions: {
+					minValue: 1,
+					maxValue: 4,
+				},
+				default: 1,
+				description: 'Number of Videos to generate (1-4)',
+			},
+			{
 				displayName: 'Reply URL',
 				name: 'replyUrl',
 				type: 'string',
