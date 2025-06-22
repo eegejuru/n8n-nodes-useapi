@@ -82,6 +82,7 @@ export const videosCreateFields: INodeProperties[] = [
 			{ name: 'I2V-01-live (Image-to-Video, Live)', value: 'I2V-01-live' },
 			{ name: 'I2V-01-Director (Image-to-Video Director)', value: 'I2V-01-Director' },
 			{ name: 'S2V-01 (Subject Reference)', value: 'S2V-01' },
+			{ name: 'Hailuo-02 (Image-to-Video)', value: '02' },
 		],
 		default: 'I2V-01',
 		displayOptions: {
@@ -124,6 +125,18 @@ export const videosCreateFields: INodeProperties[] = [
 				default: 1,
 				description: 'Number of Videos to generate (1-4)',
 			},
+				{
+		displayName: 'Options',
+		name: 'options',
+		type: 'options',
+		options: [
+			{ name: '768p-6sec', value: '768p-6sec' },
+			{ name: '768p-10sec', value: '768p-10sec' },
+			{ name: '1080p-6sec', value: '1080p-6sec' },
+		],
+		default: '768p-6sec',
+		description: 'Resolution and Duration Options',
+	},
 			{
 				displayName: 'Reply URL',
 				name: 'replyUrl',
