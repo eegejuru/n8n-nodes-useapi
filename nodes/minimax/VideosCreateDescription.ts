@@ -83,6 +83,8 @@ export const videosCreateFields: INodeProperties[] = [
 			{ name: 'I2V-01-Director (Image-to-Video Director)', value: 'I2V-01-Director' },
 			{ name: 'S2V-01 (Subject Reference)', value: 'S2V-01' },
 			{ name: 'Hailuo-02 (Image-to-Video)', value: '02' },
+			{ name: 'Hailuo-02.3 (Image-to-Video)', value: 'I2V-2.3' },
+			{ name: 'Hailuo-02.3 Fast (Image-to-Video)', value: 'I2V-2.3-Fast' },
 		],
 		default: 'I2V-01',
 		displayOptions: {
